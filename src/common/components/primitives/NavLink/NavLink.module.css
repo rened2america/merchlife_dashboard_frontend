@@ -1,0 +1,21 @@
+.nv-nav-button {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  align-items: center;
+  height: 56px;
+  color: #15171a;
+  font-weight: 700;
+  font-size: 14px;
+  padding-left: 32px;
+}
+
+.nv-nav-button-active {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  align-items: center;
+  height: 56px;
+  color: #40474f;
+  font-weight: 400;
+  font-size: 14px;
+  padding-left: 32px;
+}
