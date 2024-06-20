@@ -67,6 +67,7 @@ export const Object3D = (props: any) => {
     (state) => state.updateResetProductColor
   );
   const name = useProductStore((state) => state.name);
+  const price = useProductStore((state) => state.price)
   const resetProductColor = useProductStore((state) => state.resetProductColor);
 
   useEffect(
@@ -108,6 +109,7 @@ export const Object3D = (props: any) => {
         scale,
         name,
         subtitle,
+        price,
         description,
         type: "Shirt",
         tags,

@@ -6,6 +6,7 @@ type ProductData = {
   name: string;
   groupId: number;
   subtitle: string;
+  price: number;
   description: string;
   imgListProduct: {
     white: string;

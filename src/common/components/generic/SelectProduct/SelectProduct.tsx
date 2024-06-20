@@ -2,7 +2,7 @@ import {
   MenuPropertiesLayout,
   MenuPropertiesLayoutTitle,
 } from "@/common/layouts/PageLayout/MenuPropertiesLayout";
-import { useProductStore } from "@/store/productStore";
+import { minimumPrices, useProductStore } from "@/store/productStore";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { TagsInput } from "react-tag-input-component";
@@ -24,8 +24,11 @@ export const SelectProduct = () => {
   const tags = useProductStore((state) => state.tags);
   const updateTags = useProductStore((state) => state.updateTags);
   const updateName = useProductStore((state) => state.updateName);
+  const setPrice = useProductStore((state) => state.setPrice);
+  const validateAndUpdatePrice = useProductStore((state) => state.validateAndUpdatePrice);
   const updateDescription = useProductStore((state) => state.updateDescription);
   const name = useProductStore((state) => state.name);
+  const price = useProductStore((state) => state.price);
   const description = useProductStore((state) => state.description);
   return (
     <MenuPropertiesLayout>
@@ -79,6 +82,43 @@ export const SelectProduct = () => {
                 fontSize: "14px",
               }}
             />
+            <label
+              style={{
+                fontSize: "13px",
+                fontWeight: "700",
+              }}
+              htmlFor="price"
+            >
+              Price
+            </label>
+            {/* use aria-invalid to indicate field contain error */}
+            <input
+              onChange={(e) => {
+                setPrice(parseFloat(e.target.value)); // Temporarily set the price
+              }}
+              onBlur={(e) => {
+                validateAndUpdatePrice(parseFloat(e.target.value));
+              }}
+              value={price}
+              id="price"
+              // min={minimumPrices[selectModel]}
+              style={{
+                width: "100%",
+                border: "1px solid rgb(212, 212, 216)",
+                borderRadius: "8px",
+                padding: "4px 8px",
+                fontSize: "14px",
+              }}
+              type={"number"}
+              step={0.01}
+            />
+            <p
+              id="price-description"
+              style={{ color: "gray", fontSize: "13px" }}
+            >
+            <em>Minimum price: {minimumPrices[selectModel]}</em>
+            </p>
+
           </div>
           <div
             style={{
@@ -89,6 +129,7 @@ export const SelectProduct = () => {
               style={{
                 fontSize: "13px",
                 fontWeight: "700",
+                marginTop: "5px"
               }}
               htmlFor="description"
             >

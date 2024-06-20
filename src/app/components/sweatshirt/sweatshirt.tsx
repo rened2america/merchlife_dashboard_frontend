@@ -68,6 +68,7 @@ export const Sweatshirt = (props: any) => {
     (state) => state.updateResetProductColor
   );
   const name = useProductStore((state) => state.name);
+  const price = useProductStore((state) => state.price);
   const resetProductColor = useProductStore((state) => state.resetProductColor);
 
   useEffect(
@@ -115,6 +116,7 @@ export const Sweatshirt = (props: any) => {
         scale,
         name,
         subtitle,
+        price,
         description,
         type: "Sweatshirt",
         tags,

@@ -20,6 +20,7 @@ const initialState = {
   },
   name: "",
   subtitle: "",
+  price: 0,
   description: "",
   product: "",
   color: "#f0f8ff",
@@ -55,7 +56,66 @@ type TcolorsSelected = {
   black: boolean;
 };
 
-export const useProductStore = create((set) => {
+interface ProductState {
+  imgLogo: string;
+  imgBase64Logo: string;
+  groupId: number;
+  imgProduct: TimgProduct;
+  colorsSelected: TcolorsSelected;
+  name: string;
+  subtitle: string;
+  price: number;
+  description: string;
+  product: string;
+  color: string;
+  x: number;
+  y: number;
+  z: number;
+  angle: number;
+  height: number;
+  width: number;
+  scale: number;
+  save: boolean;
+  menuDesign: string;
+  openToast: boolean;
+  transitionProduct: string;
+  resetProductColor: boolean;
+  selectModel: string;
+  tags: string[];
+  addNewImgProduct: (imgProduct: Partial<TimgProduct>) => void;
+  updatePosition: (position: { x: number; y: number; z: number }) => void;
+  updateDimensions: (dimensions: { height: number; width: number; scale: number }) => void;
+  updateGroupId: (groupId: number) => void;
+  updateColor: (color: string) => void;
+  updateSelectModel: (selectModel: string) => void;
+  updateTags: (tags: string) => void;
+  updateResetProductColor: (resetProductColor: boolean) => void;
+  updateColorsSelected: (colorsSelected: string) => void;
+  updateName: (name: string) => void;
+  setPrice: (price: number) => void;
+  validateAndUpdatePrice: (price: number) => void;
+  updateSubtitle: (subtitle: string) => void;
+  updateDescription: (description: string) => void;
+  updateProduct: (product: string) => void;
+  updateImgLogo: (imgLogo: string) => void;
+  updateSave: (save: boolean) => void;
+  updateAngle: (angle: number) => void;
+  updateScale: (scale: number) => void;
+  updateMenuDesign: (menuDesign: string) => void;
+  updateOpenToast: (openToast: boolean) => void;
+  updateTransitionProduct: (transitionProduct: string) => void;
+  updateImgBase64Logo: (imgBase64Logo: string) => Promise<void>;
+  reset: () => void;
+}
+
+export const minimumPrices: Record<string, number> = {
+  Sweatshirt: 25.99,
+  Shirt: 15.99,
+  Hoodie: 36.99,
+  Mug: 24.99,
+};
+
+export const useProductStore = create<ProductState>((set, get) => {
   return {
     ...initialState,
     addNewImgProduct: (imgProduct: TimgProduct) => {
@@ -85,7 +145,10 @@ export const useProductStore = create((set) => {
     },
     updateGroupId: (groupId: number) => set({ groupId }),
     updateColor: (color: string) => set({ color }),
-    updateSelectModel: (selectModel: string) => set({ selectModel }),
+    updateSelectModel: (selectModel: string) => {
+      const minPrice = minimumPrices[selectModel] || 15.99;
+      set({ selectModel, price: minPrice });
+    },
     updateTags: (tags: string) => set({ tags }),
 
     updateResetProductColor: (resetProductColor: boolean) =>
@@ -100,6 +163,13 @@ export const useProductStore = create((set) => {
         };
       }),
     updateName: (name: string) => set({ name }),
+    setPrice: (price: number) => set({ price }),
+    validateAndUpdatePrice: (price: number) => {
+      const { selectModel } = get();
+      const minPrice = minimumPrices[selectModel] || 15.99;
+      const validatedPrice = parseFloat(price.toString()) < minPrice ? minPrice : parseFloat(price.toString());
+      set({ price: validatedPrice });
+    },
     updateSubtitle: (subtitle: string) => set({ subtitle }),
     updateDescription: (description: string) => set({ description }),
     updateProduct: (product: string) => set({ product }),

@@ -32,7 +32,7 @@ export const Avatar = () => {
     }
 
     const firtsInitial = userName.split(" ")[0][0].toUpperCase();
-    const secondInitial = userName.split(" ")[1][0].toUpperCase();
+    const secondInitial = userName.split(" ")[1] ? userName.split(" ")[1][0].toUpperCase() : null;
 
     if (!secondInitial) {
       return firtsInitial;
