@@ -17,6 +17,8 @@ const Gallery = () => {
   const [zoom, setZoom] = useState(1);
   const [urlImage, setUrlImage] = useState(null);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [shouldCreatePoster, setShouldCreatePoster] = useState(false);
+  const [shouldCreateCanvas, setShouldCreateCanvas] = useState(false);
   const [imageCrop, setImageCrop] = useState(null);
   const onCropComplete = (croppedArea, croppedAreaPixels) => {
     console.log(croppedArea, croppedAreaPixels);
@@ -64,10 +66,19 @@ const Gallery = () => {
       formData.append("art", selectedFile);
       formData.append("name", imageName);
       formData.append("imageCrop", imageCrop);
+      formData.append("shouldCreateCanvas", String(shouldCreateCanvas));
+      formData.append("shouldCreatePoster", String(shouldCreatePoster));
       mutate(formData);
     } else {
-      // Manejar el caso en que no se haya seleccionado una imagen o no se haya ingresado un nombre
+      // Handle the case where an image has not been selected or a name has not been entered
     }
+  };
+  const handlePosterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setShouldCreatePoster(event.target.checked);
+  };
+
+  const handleCanvasChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setShouldCreateCanvas(event.target.checked);
   };
 
   useEffect(() => {
@@ -236,6 +247,22 @@ const Gallery = () => {
               }}
             >
               <IconUpload />
+            </div>
+          </div>
+          <div style={{ marginTop: "10px" }}>
+            <div>
+              <input type="checkbox" id="shouldCreatePoster" name="shouldCreatePoster"checked={shouldCreatePoster} onChange={handlePosterChange}/>
+              <label htmlFor="shouldCreatePoster"
+                className="text-white"
+                style={{ marginLeft: "8px" }}
+              >Create Poster</label>
+            </div>
+            <div>
+              <input type="checkbox" id="shouldCreateCanvas" name="shouldCreateCanvas" checked={shouldCreateCanvas} onChange={handleCanvasChange}/>
+              <label htmlFor="shouldCreateCanvas"
+                className="text-white"
+                style={{ marginLeft: "8px" }}
+              >Create Canvas</label>
             </div>
           </div>
           <button
