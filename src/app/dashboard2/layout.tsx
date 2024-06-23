@@ -4,7 +4,7 @@ import "./Layout.css";
 import { IconHome } from "@/common/components/icons/IconHome";
 import { IconLayout } from "@/common/components/icons/iconLayout";
 import { Avatar } from "@/common/components/primitives/Avatar/Avatar";
-import { FC, ReactNode } from "react";
+import { FC, ReactNode, useState, useEffect } from "react";
 import { IconOrders } from "@/common/components/icons/IconOrder";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -18,8 +18,31 @@ type NewLayout = {
 
 const NewLayout: FC<NewLayout> = ({ children }) => {
   const pathname = usePathname();
-  const { data, isLoading } = useGetProfile();
-  if (isLoading) {
+  const { data, isLoading: profileLoading } = useGetProfile();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const handleRouteChangeStart = () => setLoading(true);
+    const handleRouteChangeEnd = () => setLoading(false);
+
+    // Initially set loading to false when the component mounts
+    handleRouteChangeEnd();
+
+    const handleRouteChange = () => {
+      console.log("handleRouteChange")
+      handleRouteChangeStart();
+      setTimeout(handleRouteChangeEnd, 1000);
+    };
+
+    // Listen for changes in the pathname
+    handleRouteChange();
+
+    return () => {
+      handleRouteChangeEnd();
+    };
+  }, [pathname]);
+
+  if (profileLoading || loading) {
     return (
       <div
         style={{
@@ -29,7 +52,7 @@ const NewLayout: FC<NewLayout> = ({ children }) => {
           width: "100%",
         }}
       >
-        <SyncLoader loading={isLoading} />
+        <SyncLoader loading={profileLoading || loading} />
       </div>
     );
   }
