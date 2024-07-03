@@ -9,6 +9,7 @@ import Image from "next/image";
 import Cropper from "react-easy-crop";
 import getCroppedImg from "./cropImage";
 import BeatLoader from "react-spinners/BeatLoader";
+import GenerateAIImage from "./GenerateAIImage";
 const Gallery = () => {
   const { mutate, isLoading: isLoadingArt } = useUploadArt();
   const { data, isLoading, refetch } = useGetGallery();
@@ -20,6 +21,7 @@ const Gallery = () => {
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [shouldCreatePoster, setShouldCreatePoster] = useState(false);
   const [shouldCreateCanvas, setShouldCreateCanvas] = useState(false);
+  const [useAIForImage, setuseAIForImage] = useState(true)
   const [imageCrop, setImageCrop] = useState(null);
   const onCropComplete = (croppedArea, croppedAreaPixels) => {
     console.log(croppedArea, croppedAreaPixels);
@@ -82,6 +84,10 @@ const Gallery = () => {
     setShouldCreateCanvas(event.target.checked);
   };
 
+  const toggleUseAIForImage = () => {
+    setuseAIForImage(!useAIForImage)
+  }
+
   useEffect(() => {
     if (!isLoadingArt) {
       refetch();
@@ -93,6 +99,10 @@ const Gallery = () => {
   return (
     <PageLayout>
       <PageTitle>Gallery</PageTitle>
+      <button 
+      className="btn hover p-2.5 h-full text-sm font-medium text-white bg-stone-950 rounded border border-stone-950 hover:bg-stone-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={toggleUseAIForImage}
+      >{useAIForImage ? "Upload a custom image" : "Generate an Image using AI"}
+      </button>
       <div
         style={{
           display: "grid",
@@ -141,7 +151,10 @@ const Gallery = () => {
                 </div>
               );
             })}
+            
         </div>
+      
+
         <div
           style={{
             display: "grid",
@@ -154,6 +167,14 @@ const Gallery = () => {
             borderRadius: "16px",
           }}
         >
+         
+            
+          {
+            useAIForImage ? (
+              <GenerateAIImage/>
+
+            ) : (
+              <>
           <input
             type="text"
             placeholder="Enter image name"
@@ -290,7 +311,11 @@ const Gallery = () => {
                 "Upload logo"
             }
           </button>
+          </>
+            )
+          }
         </div>
+    
       </div>
     </PageLayout>
   );
