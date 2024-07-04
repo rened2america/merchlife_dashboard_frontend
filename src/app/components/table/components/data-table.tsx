@@ -126,74 +126,17 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  <div
-                    style={{
-                      width: "100%",
-                      display: "grid",
-                      justifyItems: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "grid",
-                        padding: "32px 16px",
-                        justifyItems: "center",
-                        alignItems: "center",
-                        width: "300px",
-                        gridTemplateRows: "24px 40px 24px 40px",
-                        gap: "8px",
-                      }}
-                    >
-                      <div
-                        style={{
-                          fontSize: "16px",
-                          fontWeight: "700",
-                        }}
-                      >
-                        Welcome to your Products
-                      </div>
-                      <div
-                        style={{
-                          fontSize: "14px",
-                          fontWeight: "700",
-                          color: "#a5aeb7",
-                        }}
-                      >
+                  <div className="w-full grid place-items-center">
+                    <div className="grid gap-2 p-8 w-[300px] text-center">
+                      <div className="text-lg font-bold">Welcome to your Products</div>
+                      <div className="text-sm font-bold text-gray-500">
                         You'll find products here once you create one.
                       </div>
-                      <div
-                        style={{
-                          fontSize: "13px",
-                          fontWeight: "500",
-                          color: "#a5aeb7",
-                        }}
-                      >
+                      <div className="text-sm font-medium text-gray-500">
                         Go create your first product
                       </div>
-                      <div
-                        style={{
-                          display: "grid",
-                          alignItems: "center",
-                          justifyItems: "center",
-                          fontSize: "14px",
-                          fontWeight: "700",
-                          backgroundColor: "#fff27a",
-                          width: "80%",
-                          height: "40px",
-                          borderRadius: "8px",
-                        }}
-                      >
-                        <Link
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            display: "grid",
-                            alignItems: "center",
-                            justifyItems: "center",
-                          }}
-                          href="/dashboard2/product/new"
-                        >
+                      <div className="text-center font-bold bg-yellow-200 w-4/5 h-10 rounded-md">
+                        <Link href="/dashboard2/product/new" className="w-full h-full grid place-items-center">
                           Create product
                         </Link>
                       </div>

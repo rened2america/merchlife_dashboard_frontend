@@ -1,6 +1,5 @@
 import {useEffect, useState} from 'react'
 import { useGetGallery, useUploadArt } from './useGallery';
-import { env } from "@/lib/env"
 import * as Toast from "@radix-ui/react-toast";
 import { ToastContainer, toast } from "react-toastify";
 import { IconNotification } from '@/common/components/icons/IconNotification';

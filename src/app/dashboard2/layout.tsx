@@ -11,6 +11,7 @@ import Link from "next/link";
 import { useGetProfile } from "./settings/profile/useProfile";
 import SyncLoader from "react-spinners/SyncLoader";
 import { LuGalleryThumbnails } from "react-icons/lu";
+import Image from "next/image";
 
 type NewLayout = {
   children: ReactNode;
@@ -20,7 +21,7 @@ const NewLayout: FC<NewLayout> = ({ children }) => {
   const pathname = usePathname();
   const { data, isLoading: profileLoading } = useGetProfile();
   const [loading, setLoading] = useState(false);
-
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   useEffect(() => {
     const handleRouteChangeStart = () => setLoading(true);
     const handleRouteChangeEnd = () => setLoading(false);
@@ -56,71 +57,82 @@ const NewLayout: FC<NewLayout> = ({ children }) => {
       </div>
     );
   }
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
   return (
+    <>
+    <div className="md:hidden fixed mt-2 right-4 z-10">
+        <button
+          className="p-2 bg-gray-100 rounded-sm "
+          onClick={toggleSidebar}
+        >
+          {isSidebarOpen ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6 text-gray-700"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6 text-gray-700"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16m-7 6h7"
+              />
+            </svg>
+          )}
+        </button>
+      </div>
     <div
-      style={{
-        maxHeight: "100%",
-        height: "100%",
-        display: "grid",
-        gridTemplateColumns: "224px 1fr",
-      }}
+     className={`
+      h-full 
+      ${isSidebarOpen ? 'md:grid sm:grid' : 'md:grid'} 
+      grid-cols-[224px_1fr] lg:grid xl:grid
+    `}
     >
       <nav
-        style={{
-          display: "grid",
-          gridTemplateRows: "96px 1fr",
-        }}
+      className={`${isSidebarOpen ? 'grid' : 'hidden'} md:grid xl:grid lg:grid grid-rows-[96px_1fr]  `}
       >
         <header
-          style={{
-            display: "grid",
-            alignItems: "center",
-            justifyItems: "center",
-            padding: "32px",
-          }}
+        className="grid items-center justify-center p-8"
         >
           <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "40px 1fr",
-              alignItems: "center",
-            }}
+          className="grid grid-cols-[40px_1fr] items-center"
           >
-            <img height="32px" width="28px" src="/LogoBlack.png" alt="logo" />
+            <Image height={32} width={28} src='/LogoBlack.png' alt="logo"/>
             <div
-              style={{
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-                fontSize: "0.94rem",
-                letterSpacing: "0",
-                lineHeight: "1.3rem",
-                fontWeight: "700",
-                color: "#15171a",
-                width: "120px",
-              }}
+            className="overflow-hidden text-ellipsis whitespace-nowrap text-[0.94rem] tracking-normal leading-5 font-bold text-   w-[120px]" 
             >
               {data?.data.getArtist.name}
             </div>
           </div>
         </header>
         <section
-          style={{
-            display: "grid",
-            gridTemplateRows: "1fr 96px",
-          }}
+        className="grid grid-rows-[1fr 96px]"
         >
           <div
-            style={{
-              color: "black",
-            }}
+          className="h-full text-black"
           >
             <div
-              style={{
-                display: "grid",
-                alignItems: "center",
-                justifyItems: "start",
-              }}
+            className="grid items-center"
             >
               <NavLink path={pathname} href="/dashboard2">
                 <IconHome />
@@ -128,11 +140,7 @@ const NewLayout: FC<NewLayout> = ({ children }) => {
               </NavLink>
             </div>
             <div
-              style={{
-                display: "grid",
-                alignItems: "center",
-                justifyItems: "start",
-              }}
+            className="grid items-center justify-items-start"
             >
               <NavLink path={pathname} href="/dashboard2/products">
                 <IconLayout />
@@ -141,11 +149,7 @@ const NewLayout: FC<NewLayout> = ({ children }) => {
             </div>
 
             <div
-              style={{
-                display: "grid",
-                alignItems: "center",
-                justifyItems: "start",
-              }}
+            className="grid items-center justify-items-start"
             >
               <NavLink path={pathname} href="/dashboard2/orders">
                 <IconOrders />
@@ -154,11 +158,7 @@ const NewLayout: FC<NewLayout> = ({ children }) => {
             </div>
 
             <div
-              style={{
-                display: "grid",
-                alignItems: "center",
-                justifyItems: "start",
-              }}
+            className="gird items-center justify-items-start"
             >
               <NavLink path={pathname} href="/dashboard2/gallery">
                 <LuGalleryThumbnails style={{ fontSize: "20px" }} />
@@ -167,35 +167,13 @@ const NewLayout: FC<NewLayout> = ({ children }) => {
             </div>
 
             <div
-              style={{
-                display: "grid",
-                alignItems: "center",
-                justifyItems: "center",
-                height: "100px",
-              }}
+            className="grid items-center justify-items-center h-24"
             >
               <div
-                style={{
-                  display: "grid",
-                  alignItems: "center",
-                  justifyItems: "center",
-                  fontSize: "14px",
-                  fontWeight: "700",
-                  backgroundColor: "black",
-                  width: "80%",
-                  height: "40px",
-                  borderRadius: "8px",
-                  color: "white",
-                }}
+              className="gird items-center justify-items-center font-bold text-sm bg-black w-4/5 h-10 rounded-lg text-white"
               >
                 <Link
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    display: "grid",
-                    alignItems: "center",
-                    justifyItems: "center",
-                  }}
+                className="grid w-full h-full items-center justify-items-center"
                   href="/dashboard2/product/new"
                 >
                   Create product
@@ -204,26 +182,23 @@ const NewLayout: FC<NewLayout> = ({ children }) => {
             </div>
           </div>
           <footer
-            style={{
-              display: "grid",
-              alignItems: "center",
-              justifyItems: "center",
-            }}
+          className="grid items-end mb-10 justify-items-center"
           >
             <Avatar />
           </footer>
         </section>
       </nav>
       <main
-        style={{
-          borderLeft: "1px solid #e6e9eb",
-          overflowY: "auto",
-        }}
+      className="border border-l border-s-[#e6e9eb] overflow-y-auto "
       >
         {children}
       </main>
+      
     </div>
+    </>
   );
 };
 
 export default NewLayout;
+
+

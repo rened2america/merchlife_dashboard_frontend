@@ -6,7 +6,7 @@ type TPageLayout = {
 
 export const PageLayout: FC<TPageLayout> = ({ children }) => {
   return (
-    <section
+    <section 
       style={{
         padding: "0 48px 48px",
       }}
