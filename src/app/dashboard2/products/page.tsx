@@ -7,24 +7,11 @@ import { DataTable } from "@/app/components/table/components/data-table";
 
 const Products = () => {
   const { isLoading, data, isSuccess } = useGetProducts();
-
   return (
     <PageLayout>
       <PageTitle>Products</PageTitle>
       {isLoading ? (
-        <div
-          style={{
-            width: "100%",
-            height: "50vh",
-            fontSize: "16px",
-            display: "grid",
-            justifyItems: "center",
-            alignItems: "center",
-            borderRadius: "16px",
-            border: "1px solid #e5e7eb",
-            fontWeight: "700",
-          }}
-        >
+        <div className="w-full h-[50vh] text-base grid place-items-center rounded-lg border border-gray-300 font-bold">
           <div>Loading Products...</div>
         </div>
       ) : (

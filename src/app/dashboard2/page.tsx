@@ -26,149 +26,56 @@ const NewHome = () => {
   const { data: orders, isLoading } = useGetOrders();
   const [dataValue, setDatavalue] = useState(initialData);
 
+  const DashboardCard = [
+    {
+      name: "Total Revenue",
+      bgcolor: "bg-yellow-200",
+      textColor: "text-black",
+      data: orders?.data.amount,
+    },
+    {
+      name: "Total Sales",
+      bgcolor: "bg-gray-800",
+      textColor: "text-white",
+      data: orders?.data.countSales,
+    },
+    {
+      name: "Total Designs",
+      bgcolor: "bg-gray-300",
+      textColor: "text-black",
+      data: data?.data.products.length,
+    },
+  ];
+
   useEffect(() => {
     if (!isLoading) {
-      setDatavalue(orders?.data.normalizeOrders);
+      setDatavalue(orders?.data?.normalizeOrders);
     }
   }, [isLoading]);
-  console.log(orders?.data.normalizeOrders.length);
+
   return (
     <PageLayout>
       <PageTitle>Dashboard</PageTitle>
-      <div
-        style={{
-          width: "100%",
-          height: "200px",
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr",
-          gap: "calc(50%/3)",
-        }}
-      >
-        <div
-          style={{
-            width: "200px",
-            backgroundColor: "#fff27a",
-            height: "200px",
-            borderRadius: "16px",
-            display: "grid",
-            gridTemplateRows: "48px 1fr",
-          }}
-        >
+      <div className="w-full h-auto grid grid-cols-1 md:grid-cols-3  gap-4 xl:gap-[14rem]">
+        {DashboardCard.map((card, index) => (
           <div
-            style={{
-              display: "grid",
-              alignItems: "center",
-              justifyItems: "center",
-              fontSize: "14px",
-              fontWeight: "700",
-            }}
-          >
-            Total Revenue
-          </div>
-          <div
-            style={{
-              display: "grid",
-              alignItems: "center",
-              justifyItems: "center",
-            }}
+            key={index}
+            className={`xl:w-64 ${card.bgcolor} h-52 sm:w-full rounded-lg grid grid-rows-[48px_1fr]`}
           >
             <div
-              style={{
-                fontSize: "24px",
-                fontWeight: "700",
-              }}
+              className={`grid place-items-center text-lg font-bold ${card.textColor}`}
             >
-              ${orders?.data.amount}
+              {card.name}
+            </div>
+            <div className="grid place-items-center">
+              <div className={`text-2xl font-bold ${card.textColor}`}>
+                {card.name === "Total Revenue" ? "$" + card?.data : card?.data}
+              </div>
             </div>
           </div>
-        </div>
-        <div
-          style={{
-            width: "200px",
-            backgroundColor: "#35363d", // "#dcdcdd", //#33353b
-            height: "200px",
-            borderRadius: "16px",
-            display: "grid",
-            gridTemplateRows: "48px 1fr",
-          }}
-        >
-          <div
-            style={{
-              display: "grid",
-              alignItems: "center",
-              justifyItems: "center",
-              fontSize: "14px",
-              fontWeight: "700",
-              color: "white",
-            }}
-          >
-            Total Sales
-          </div>
-          <div
-            style={{
-              display: "grid",
-              alignItems: "center",
-              justifyItems: "center",
-            }}
-          >
-            <div
-              style={{
-                fontSize: "24px",
-                fontWeight: "700",
-                color: "white",
-              }}
-            >
-              {orders?.data.countSales}
-            </div>
-          </div>
-        </div>
-        <div
-          style={{
-            width: "200px",
-            backgroundColor: "#dcdcdd", // "#dcdcdd", //#33353b
-            height: "200px",
-            borderRadius: "16px",
-            display: "grid",
-            gridTemplateRows: "48px 1fr",
-          }}
-        >
-          <div
-            style={{
-              display: "grid",
-              alignItems: "center",
-              justifyItems: "center",
-              fontSize: "14px",
-              fontWeight: "700",
-            }}
-          >
-            Total Designs
-          </div>
-          <div
-            style={{
-              display: "grid",
-              alignItems: "center",
-              justifyItems: "center",
-            }}
-          >
-            <div
-              style={{
-                fontSize: "24px",
-                fontWeight: "700",
-              }}
-            >
-              {data?.data.products.length}
-            </div>
-          </div>
-        </div>
+        ))}
       </div>
-
-      <div
-        style={{
-          width: "100%",
-          marginTop: "48px",
-        }}
-      >
-        {/* <PrincipalTable /> */}
+      <div className="w-full mt-16">
         <Chart data={dataValue}></Chart>
       </div>
       <div>{!isLoading && <LastOrders orders={orders?.data.orders} />}</div>
