@@ -23,13 +23,14 @@ export function DataTablePagination<TData>({
   table,
 }: DataTablePaginationProps<TData>) {
   return (
-    <div className="flex items-center justify-between px-2">
+    <div className="flex flex-col items-center justify-between px-2 space-y-4 md:flex-row md:space-y-0">
       <div className="flex-1 text-sm text-muted-foreground">
         {table.getFilteredSelectedRowModel().rows.length} of{" "}
         {table.getFilteredRowModel().rows.length} row(s) selected.
       </div>
-      <div className="flex items-center space-x-6 lg:space-x-8">
+      <div className="flex flex-col items-center space-y-4 md:flex-row md:space-x-6 md:space-y-0 lg:space-x-8">
         <div className="flex items-center space-x-2">
+        <div className="flex flex-row justify-items-center items-center gap-2">
           <p className="text-sm font-medium">Rows per page</p>
           <Select
             value={`${table.getState().pagination.pageSize}`}
@@ -48,8 +49,10 @@ export function DataTablePagination<TData>({
               ))}
             </SelectContent>
           </Select>
+          </div>
         </div>
-        <div className="flex w-[100px] items-center justify-center text-sm font-medium">
+        <div className="flex flex-row items-center justify-center w-full text-sm font-medium md:w-auto">
+        <div className="flex flex-row justify-items-center items-center gap-4">
           Page {table.getState().pagination.pageIndex + 1} of{" "}
           {table.getPageCount()}
         </div>
@@ -90,6 +93,7 @@ export function DataTablePagination<TData>({
             <span className="sr-only">Go to last page</span>
             <DoubleArrowRightIcon className="h-4 w-4" />
           </Button>
+        </div>
         </div>
       </div>
     </div>

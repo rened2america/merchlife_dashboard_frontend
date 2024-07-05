@@ -15,17 +15,8 @@ const Orders = () => {
       <PageTitle>Orders</PageTitle>
       {isLoading ? (
         <div
-          style={{
-            width: "100%",
-            height: "50vh",
-            fontSize: "16px",
-            display: "grid",
-            justifyItems: "center",
-            alignItems: "center",
-            borderRadius: "16px",
-            border: "1px solid #e5e7eb",
-            fontWeight: "700",
-          }}
+
+        className="w-full h-[50vh] text-base grid place-items-center rounded-lg border border-s-[#e5e7eb] font-bold"
         >
           <div>Loading Orders...</div>
         </div>
