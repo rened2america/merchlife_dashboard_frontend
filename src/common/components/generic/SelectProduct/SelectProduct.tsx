@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { TagsInput } from "react-tag-input-component";
 import "../../../../app/dashboard2/product/edit/[productId]/edit.css";
+import Image from "next/image";
+
 export const SelectProduct = () => {
   const updateSubtitle = useProductStore((state) => state.updateSubtitle);
   const subtitle = useProductStore((state) => state.subtitle);
@@ -30,153 +32,52 @@ export const SelectProduct = () => {
   const name = useProductStore((state) => state.name);
   const price = useProductStore((state) => state.price);
   const description = useProductStore((state) => state.description);
+  
   return (
     <MenuPropertiesLayout>
       <MenuPropertiesLayoutTitle>Product</MenuPropertiesLayoutTitle>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateRows: "1fr 232px",
-          overflowY: "auto",
-        }}
-      >
-        <div
-          style={{
-            display: "grid",
-            gridTemplateRows: "32px 72px 120px 1fr",
-            justifyItems: "center",
-            alignItems: "center",
-            padding: "8px 16px",
-            gap: "8px",
-          }}
-        >
-          <div>Properties</div>
-          <div
-            style={{
-              display: "grid",
-              justifyItems: "start",
-              width: "100%",
-            }}
-          >
-            <label
-              style={{
-                fontSize: "13px",
-                fontWeight: "700",
-              }}
-              htmlFor="name"
-            >
-              Title
-            </label>
-            {/* use aria-invalid to indicate field contain error */}
+      <div className="grid grid-rows-[1fr_232px] overflow-y-auto cust-scroll p-4" style={{ scrollbarWidth: 'thin' }}>
+        <div className="grid grid-rows-[32px_72px_120px_1fr] justify-items-center w-full items-center gap-8">
+          <div className="p-4">Properties</div>
+          <div className="grid justify-items-start w-full ">
+            <label className="text-sm font-bold" htmlFor="name">Title</label>
             <input
-              onChange={(e) => {
-                updateName(e.target.value);
-              }}
+              onChange={(e) => updateName(e.target.value)}
               value={name}
               id="name"
-              style={{
-                width: "100%",
-                border: "1px solid rgb(212, 212, 216)",
-                borderRadius: "8px",
-                padding: "4px 8px",
-                fontSize: "14px",
-              }}
+              className="w-full border border-gray-300 rounded-lg p-2 text-base"
             />
-            <label
-              style={{
-                fontSize: "13px",
-                fontWeight: "700",
-              }}
-              htmlFor="price"
-            >
-              Price
-            </label>
-            {/* use aria-invalid to indicate field contain error */}
+            <label className="text-sm font-bold mt-2" htmlFor="price">Price</label>
             <input
-              onChange={(e) => {
-                setPrice(parseFloat(e.target.value)); // Temporarily set the price
-              }}
-              onBlur={(e) => {
-                validateAndUpdatePrice(parseFloat(e.target.value));
-              }}
+              onChange={(e) => setPrice(parseFloat(e.target.value))}
+              onBlur={(e) => validateAndUpdatePrice(parseFloat(e.target.value))}
               value={price}
               id="price"
-              // min={minimumPrices[selectModel]}
-              style={{
-                width: "100%",
-                border: "1px solid rgb(212, 212, 216)",
-                borderRadius: "8px",
-                padding: "4px 8px",
-                fontSize: "14px",
-              }}
-              type={"number"}
+              className="w-full border border-gray-300 rounded-lg p-2 text-base"
+              type="number"
               step={0.01}
             />
-            <p
-              id="price-description"
-              style={{ color: "gray", fontSize: "13px" }}
-            >
-            <em>Minimum price: {minimumPrices[selectModel]}</em>
+            <p id="price-description" className="text-gray-500 text-sm">
+              <em>Minimum price: {minimumPrices[selectModel]}</em>
             </p>
-
           </div>
-          <div
-            style={{
-              width: "100%",
-            }}
-          >
-            <label
-              style={{
-                fontSize: "13px",
-                fontWeight: "700",
-                marginTop: "5px"
-              }}
-              htmlFor="description"
-            >
-              Description
-            </label>
-            {/* use aria-invalid to indicate field contain error */}
+          <div className="w-full mt-8">
+            <label className="text-sm font-bold mt-2" htmlFor="description">Description</label>
             <textarea
               id="description"
-              style={{
-                width: "100%",
-                height: "80px",
-                resize: "none",
-                border: "1px solid rgb(212, 212, 216)",
-                borderRadius: "8px",
-                padding: "4px 8px",
-                fontSize: "14px",
-              }}
+              className="w-full h-20 resize-none border border-gray-300 rounded-lg p-2 text-base"
               aria-invalid={errors.description ? "true" : "false"}
               {...register("description", {
-                onChange: (e) => {
-                  updateDescription(e.target.value);
-                },
+                onChange: (e) => updateDescription(e.target.value),
                 value: name,
                 required: false,
                 maxLength: 280,
               })}
             />
             <div>
-              <span
-                style={{
-                  fontSize: "14px",
-                  fontWeight: "700",
-                }}
-              >
-                {watch("description") ? watch("description").length : "0"}
-              </span>
-              <span
-                style={{
-                  fontSize: "14px",
-                  fontWeight: "500",
-                }}
-              >
-                /280
-              </span>
+              <span className="text-base font-bold">{watch("description") ? watch("description").length : "0"}</span>
+              <span className="text-base font-medium">/280</span>
             </div>
-
-            {/* use role="alert" to announce the error message */}
             {errors.description && errors.description.type === "required" && (
               <span role="alert">This is required</span>
             )}
@@ -184,132 +85,45 @@ export const SelectProduct = () => {
               <span role="alert">Max length exceeded</span>
             )}
           </div>
-
-          <div
-            style={{
-              width: "100%",
-            }}
-          >
-            <div
-              style={{
-                fontSize: "13px",
-                fontWeight: "700",
-              }}
-            >
-              Tags
-            </div>
+          <div className="w-full">
+            <div className="text-sm font-bold">Tags</div>
             <TagsInput
               value={tags}
-              onChange={updateTags}
-              name="fruits"
+              onChange={() =>updateTags}
+              name="tags"
               placeHolder="Enter Tags"
             />
-            <p
-              id="custom-tags-description"
-              style={{ color: "gray", fontSize: "13px" }}
-            >
+            <p id="custom-tags-description" className="text-gray-500 text-sm">
               <em>Max of 3 tags allowed.</em>
             </p>
           </div>
         </div>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateRows: "50px 1fr",
-            justifyItems: "center",
-            alignItems: "start",
-          }}
-        >
+        <div className="grid grid-rows-[50px_1fr] justify-items-center items-start mt-4">
           <div>Select Product</div>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "100px 100px",
-              gridTemplateRows: "100px 100px",
-              height: "100px",
-              alignItems: "center",
-              justifyItems: "center",
-            }}
-          >
+          <div className="grid grid-cols-2 grid-rows-2  h-24 items-center justify-items-center gap-12">
             <div
-              style={{
-                border: selectModel === "Shirt" ? "1px solid black" : "none",
-                width: "90%",
-                height: "90%",
-                display: "grid",
-                alignItems: "center",
-                justifyItems: "center",
-                borderRadius: "999px",
-              }}
-              onClick={() => {
-                updateSelectModel("Shirt");
-              }}
+              className={`border ${selectModel === "Shirt" ? "border-black" : "border-none"} w-[100%] h-[100%] grid items-center justify-items-center rounded-full`}
+              onClick={() => updateSelectModel("Shirt")}
             >
-              <img width="80px" src="/shirtModel.png" alt="" />
+              <Image width={120} height={120} src="/shirtModel.png" alt="Shirt" />
             </div>
             <div
-              style={{
-                border: selectModel === "Hoodie" ? "1px solid black" : "none",
-                width: "90%",
-                height: "90%",
-                display: "grid",
-                alignItems: "center",
-                justifyItems: "center",
-                borderRadius: "999px",
-              }}
-              onClick={() => {
-                updateSelectModel("Hoodie");
-              }}
+              className={`border ${selectModel === "Hoodie" ? "border-black" : "border-none"} w-[100%] h-[100%] grid items-center justify-items-center rounded-full`}
+              onClick={() => updateSelectModel("Hoodie")}
             >
-              <img width="80px" src="/hoodieModel.png" alt="" />
+              <Image width={120} height={120} src="/hoodieModel.png" alt="Hoodie" />
             </div>
             <div
-              style={{
-                border: selectModel === "Mug" ? "1px solid black" : "none",
-                width: "90%",
-                height: "90%",
-                display: "grid",
-                alignItems: "center",
-                justifyItems: "center",
-                borderRadius: "999px",
-              }}
-              onClick={() => {
-                updateSelectModel("Mug");
-              }}
+              className={`border ${selectModel === "Mug" ? "border-black" : "border-none"} w-[100%] h-[100%] grid items-center justify-items-center rounded-full`}
+              onClick={() => updateSelectModel("Mug")}
             >
-              <img
-                style={{
-                  borderRadius: "80px",
-                }}
-                width="80px"
-                src="/mug.png"
-                alt="mug"
-              />
+              <Image className="rounded-full" width={120} height={120} src="/mug.png" alt="Mug" />
             </div>
             <div
-              style={{
-                border:
-                  selectModel === "Sweatshirt" ? "1px solid black" : "none",
-                width: "90%",
-                height: "90%",
-                display: "grid",
-                alignItems: "center",
-                justifyItems: "center",
-                borderRadius: "999px",
-              }}
-              onClick={() => {
-                updateSelectModel("Sweatshirt");
-              }}
+              className={`border ${selectModel === "Sweatshirt" ? "border-black" : "border-none"} w-[100%] h-[100%] grid items-center justify-items-center rounded-full`}
+              onClick={() => updateSelectModel("Sweatshirt")}
             >
-              <img
-                style={{
-                  borderRadius: "80px",
-                }}
-                width="80px"
-                src="/sweatShirt.png"
-                alt="Sweatshirt"
-              />
+              <Image className="rounded-full" width={120} height={120} src="/sweatShirt.png" alt="Sweatshirt" />
             </div>
           </div>
         </div>

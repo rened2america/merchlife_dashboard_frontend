@@ -15,6 +15,7 @@ import { ToastContainer, toast } from "react-toastify";
 import BeatLoader from "react-spinners/BeatLoader";
 
 import "react-toastify/dist/ReactToastify.css";
+
 const NewProdut = () => {
   const menu = useProductStore((state) => state.menuDesign);
   const updateMenuDesign = useProductStore((state) => state.updateMenuDesign);
@@ -34,13 +35,11 @@ const NewProdut = () => {
 
     if (tags.length > 3) {
       isError = true;
-
       errorText = errorText + ", Max 3 tags";
     }
 
     if (imgLogo === "/LogoBlack.png") {
       isError = true;
-
       errorText = errorText + ", Logo";
     }
 
@@ -61,200 +60,28 @@ const NewProdut = () => {
   };
 
   return (
-    <div
-      style={{
-        backgroundColor: "#f2f4f7",
-        height: "100%",
-      }}
-    >
-      <section
-        style={{
-          display: "grid",
-          gridTemplateColumns: "196px 1fr 296px",
-          alignItems: "start",
-          justifyItems: "center",
-          height: "100%",
-          padding: "24px 12px",
-        }}
-      >
-        <div
-          style={{
-            height: "100%",
-          }}
-        >
-          <div
-            style={{
-              height: "200px",
-              alignItems: "center",
-              justifyItems: "center",
-              backgroundColor: "white",
-              display: "grid",
-              width: "160px",
-              fontSize: "16px",
-              borderRadius: "16px",
-              fontWeight: "500",
-            }}
-          >
-            <div
-              style={
-                menu === "Product"
-                  ? {
-                      display: "grid",
-                      gridTemplateColumns: "24px 1fr",
-                      alignItems: "center",
-                      fontWeight: "700",
-                      cursor: "pointer",
-                    }
-                  : {
-                      display: "grid",
-                      gridTemplateColumns: "24px 1fr",
-                      alignItems: "center",
-                      cursor: "pointer",
-                    }
-              }
-              onClick={() => {
-                updateMenuDesign("Product");
-              }}
-            >
-              <Icon3DProduct /> Product
-            </div>
-            <div
-              style={
-                menu === "Design"
-                  ? {
-                      display: "grid",
-                      gridTemplateColumns: "24px 1fr",
-                      alignItems: "center",
-                      fontWeight: "700",
-                      cursor: "pointer",
-                    }
-                  : {
-                      display: "grid",
-                      gridTemplateColumns: "24px 1fr",
-                      alignItems: "center",
-                      cursor: "pointer",
-                    }
-              }
-              onClick={() => {
-                updateMenuDesign("Design");
-              }}
-            >
-              <IconDesign /> Design
-            </div>
-            <div
-              style={
-                menu === "Colors"
-                  ? {
-                      display: "grid",
-                      gridTemplateColumns: "24px 1fr",
-                      alignItems: "center",
-                      fontWeight: "700",
-                      cursor: "pointer",
-                    }
-                  : {
-                      display: "grid",
-                      gridTemplateColumns: "24px 1fr",
-                      alignItems: "center",
-                      cursor: "pointer",
-                    }
-              }
-              onClick={() => {
-                updateMenuDesign("Colors");
-              }}
-            >
-              <IconColor />
-              Colors
-            </div>
-          </div>
-
-          <div
-            style={{
-              height: "55%",
-              display: "grid",
-              alignItems: "end",
-              justifyItems: "center",
-            }}
-          >
-            <div
-              style={{
-                width: "100%",
-                borderRadius: "8px",
-                backgroundColor: "black",
-                height: "48px",
-                color: "white",
-                display: "grid",
-                justifyItems: "center",
-                alignItems: "center",
-                fontSize: "14px",
-                fontWeight: "700",
-                cursor: "pointer",
-              }}
-              onClick={verifySubmit}
-            >
-              Save and publish
-            </div>
-          </div>
-        </div>
-        <div
-          style={{
-            height: "90%",
-            width: "100%",
-          }}
-        >
-          <Model />
-        </div>
-        <div
-          style={{
-            height: "90%",
-            width: "100%",
-            padding: "0 24px",
-          }}
-        >
+    <div className="bg-gray-100 min-h-screen p-6">
+      <section className="grid grid-cols-1 lg:grid-cols-[300px_1fr_200px] gap-6 h-full">
+      <div className="bg-white py-4 px-2 rounded-lg shadow-md">
           <Toast.Provider swipeDirection="right">
             <Toast.Root
-              style={{
-                backgroundColor: "white",
-                borderRadius: "8px",
-                padding: "16px 32px",
-              }}
+              className="bg-white p-4 rounded-lg shadow-lg"
               open={openToast}
             >
-              <Toast.Title
-                style={{
-                  fontSize: "16px",
-                  fontWeight: "500",
-                }}
-              >
+              <Toast.Title className="text-lg font-medium">
                 Creating product
               </Toast.Title>
-              <Toast.Description
-                style={{
-                  fontSize: "14px",
-                  fontWeight: "700",
-                  display: "grid",
-                  gridTemplateColumns: "1fr 40px",
-                }}
-              >
+              <Toast.Description className="text-sm font-bold flex items-center justify-between">
                 <div>
                   {transitionProduct}
                   <BeatLoader color="#36d7b7" loading={true} size={"16px"} />
                 </div>
-
                 <div
-                  style={{
-                    borderRadius: "32px",
-                    border:
-                      transitionProduct === "saved"
-                        ? "1px solid #3DD68C"
-                        : "1px solid #FFC53D",
-                    display: "grid",
-                    alignItems: "center",
-                    justifyItems: "center",
-                    width: "32px",
-                    height: "32px",
-                    color:
-                      transitionProduct === "saved" ? "#3DD68C" : "#FFC53D",
-                  }}
+                  className={`w-8 h-8 flex items-center justify-center rounded-full border ${
+                    transitionProduct === "saved"
+                      ? "border-green-500 text-green-500"
+                      : "border-yellow-500 text-yellow-500"
+                  }`}
                 >
                   {transitionProduct === "saved" ? (
                     <IconCheckmark />
@@ -265,20 +92,7 @@ const NewProdut = () => {
               </Toast.Description>
             </Toast.Root>
             <Toast.Viewport
-              style={{
-                position: "fixed",
-                bottom: "40px",
-                right: "300px",
-                display: "flex",
-                flexDirection: "column",
-                gap: "10px",
-                width: "250px",
-                maxWidth: "100vw",
-                margin: "0",
-                listStyle: "none",
-                zIndex: "2147483647",
-                outline: "none",
-              }}
+              className="fixed bottom-10 right-24 flex flex-col gap-2 w-64 max-w-full z-50 outline-none"
             />
           </Toast.Provider>
           {menu === "Product" ? (
@@ -288,6 +102,50 @@ const NewProdut = () => {
           ) : (
             <DesignProperties />
           )}
+        </div>
+        <div className="flex justify-center items-center bg-white p-4 rounded-lg shadow-md responsive-container">
+  <Model />
+</div>
+      
+
+        <div className="flex flex-col justify-between h-full">
+          <div className="bg-white p-4 rounded-lg shadow-md">
+            <nav className="space-y-4">
+              <div
+                className={`flex items-center cursor-pointer p-2 rounded ${
+                  menu === "Product" ? "bg-gray-200 font-bold" : ""
+                }`}
+                onClick={() => updateMenuDesign("Product")}
+              >
+                <Icon3DProduct />
+                <span className="ml-2">Product</span>
+              </div>
+              <div
+                className={`flex items-center cursor-pointer p-2 rounded ${
+                  menu === "Design" ? "bg-gray-200 font-bold" : ""
+                }`}
+                onClick={() => updateMenuDesign("Design")}
+              >
+                <IconDesign />
+                <span className="ml-2">Design</span>
+              </div>
+              <div
+                className={`flex items-center cursor-pointer p-2 rounded ${
+                  menu === "Colors" ? "bg-gray-200 font-bold" : ""
+                }`}
+                onClick={() => updateMenuDesign("Colors")}
+              >
+                <IconColor />
+                <span className="ml-2">Colors</span>
+              </div>
+            </nav>
+          </div>
+          <button
+            className="mt-6 bg-black text-white p-3 rounded-lg font-bold hover:bg-gray-800 transition"
+            onClick={verifySubmit}
+          >
+            Save and publish
+          </button>
         </div>
         <ToastContainer
           position="top-right"
