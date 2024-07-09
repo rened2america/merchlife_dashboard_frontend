@@ -60,107 +60,106 @@ const NewProdut = () => {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen p-6">
-      <section className="grid grid-cols-1 lg:grid-cols-[300px_1fr_200px] gap-6 h-full">
-      <div className="bg-white py-4 px-2 rounded-lg shadow-md">
-          <Toast.Provider swipeDirection="right">
-            <Toast.Root
-              className="bg-white p-4 rounded-lg shadow-lg"
-              open={openToast}
+<div className="bg-gray-100 min-h-screen p-6">
+  <section className="grid grid-cols-1 gap-6 h-full xl:grid-cols-[300px_1fr_200px] lg:grid-cols-2">
+    <div className="bg-white py-4 px-2 rounded-lg shadow-md">
+      <Toast.Provider swipeDirection="right">
+        <Toast.Root
+          className="bg-white p-4 rounded-lg shadow-lg"
+          open={openToast}
+        >
+          <Toast.Title className="text-lg font-medium">
+            Creating product
+          </Toast.Title>
+          <Toast.Description className="text-sm font-bold flex items-center justify-between">
+            <div>
+              {transitionProduct}
+              <BeatLoader color="#36d7b7" loading={true} size={"16px"} />
+            </div>
+            <div
+              className={`w-8 h-8 flex items-center justify-center rounded-full border ${
+                transitionProduct === "saved"
+                  ? "border-green-500 text-green-500"
+                  : "border-yellow-500 text-yellow-500"
+              }`}
             >
-              <Toast.Title className="text-lg font-medium">
-                Creating product
-              </Toast.Title>
-              <Toast.Description className="text-sm font-bold flex items-center justify-between">
-                <div>
-                  {transitionProduct}
-                  <BeatLoader color="#36d7b7" loading={true} size={"16px"} />
-                </div>
-                <div
-                  className={`w-8 h-8 flex items-center justify-center rounded-full border ${
-                    transitionProduct === "saved"
-                      ? "border-green-500 text-green-500"
-                      : "border-yellow-500 text-yellow-500"
-                  }`}
-                >
-                  {transitionProduct === "saved" ? (
-                    <IconCheckmark />
-                  ) : (
-                    <IconNotification />
-                  )}
-                </div>
-              </Toast.Description>
-            </Toast.Root>
-            <Toast.Viewport
-              className="fixed bottom-10 right-24 flex flex-col gap-2 w-64 max-w-full z-50 outline-none"
-            />
-          </Toast.Provider>
-          {menu === "Product" ? (
-            <SelectProduct />
-          ) : menu === "Colors" ? (
-            <SelectColor />
-          ) : (
-            <DesignProperties />
-          )}
-        </div>
-        <div className="flex justify-center items-center bg-white p-4 rounded-lg shadow-md responsive-container">
-  <Model />
-</div>
-      
-
-        <div className="flex flex-col justify-between h-full">
-          <div className="bg-white p-4 rounded-lg shadow-md">
-            <nav className="space-y-4">
-              <div
-                className={`flex items-center cursor-pointer p-2 rounded ${
-                  menu === "Product" ? "bg-gray-200 font-bold" : ""
-                }`}
-                onClick={() => updateMenuDesign("Product")}
-              >
-                <Icon3DProduct />
-                <span className="ml-2">Product</span>
-              </div>
-              <div
-                className={`flex items-center cursor-pointer p-2 rounded ${
-                  menu === "Design" ? "bg-gray-200 font-bold" : ""
-                }`}
-                onClick={() => updateMenuDesign("Design")}
-              >
-                <IconDesign />
-                <span className="ml-2">Design</span>
-              </div>
-              <div
-                className={`flex items-center cursor-pointer p-2 rounded ${
-                  menu === "Colors" ? "bg-gray-200 font-bold" : ""
-                }`}
-                onClick={() => updateMenuDesign("Colors")}
-              >
-                <IconColor />
-                <span className="ml-2">Colors</span>
-              </div>
-            </nav>
-          </div>
-          <button
-            className="mt-6 bg-black text-white p-3 rounded-lg font-bold hover:bg-gray-800 transition"
-            onClick={verifySubmit}
-          >
-            Save and publish
-          </button>
-        </div>
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="dark"
+              {transitionProduct === "saved" ? (
+                <IconCheckmark />
+              ) : (
+                <IconNotification />
+              )}
+            </div>
+          </Toast.Description>
+        </Toast.Root>
+        <Toast.Viewport
+          className="fixed bottom-10 right-24 flex flex-col gap-2 w-64 max-w-full z-50 outline-none"
         />
-      </section>
+      </Toast.Provider>
+      {menu === "Product" ? (
+        <SelectProduct />
+      ) : menu === "Colors" ? (
+        <SelectColor />
+      ) : (
+        <DesignProperties />
+      )}
     </div>
+    <div className="flex justify-center items-center bg-white p-4 rounded-lg shadow-md">
+      <Model />
+    </div>
+    <div className="flex flex-col justify-between h-full">
+      <div className="bg-white p-4 rounded-lg shadow-md">
+        <nav className="space-y-4">
+          <div
+            className={`flex items-center cursor-pointer p-2 rounded ${
+              menu === "Product" ? "bg-gray-200 font-bold" : ""
+            }`}
+            onClick={() => updateMenuDesign("Product")}
+          >
+            <Icon3DProduct />
+            <span className="ml-2">Product</span>
+          </div>
+          <div
+            className={`flex items-center cursor-pointer p-2 rounded ${
+              menu === "Design" ? "bg-gray-200 font-bold" : ""
+            }`}
+            onClick={() => updateMenuDesign("Design")}
+          >
+            <IconDesign />
+            <span className="ml-2">Design</span>
+          </div>
+          <div
+            className={`flex items-center cursor-pointer p-2 rounded ${
+              menu === "Colors" ? "bg-gray-200 font-bold" : ""
+            }`}
+            onClick={() => updateMenuDesign("Colors")}
+          >
+            <IconColor />
+            <span className="ml-2">Colors</span>
+          </div>
+        </nav>
+      </div>
+      <button
+        className="mt-6 bg-black text-white p-3 rounded-lg font-bold hover:bg-gray-800 transition"
+        onClick={verifySubmit}
+      >
+        Save and publish
+      </button>
+    </div>
+    <ToastContainer
+      position="top-right"
+      autoClose={5000}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+      theme="dark"
+    />
+  </section>
+</div>
+
   );
 };
 

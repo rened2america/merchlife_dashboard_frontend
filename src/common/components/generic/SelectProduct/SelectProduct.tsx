@@ -100,30 +100,30 @@ export const SelectProduct = () => {
         </div>
         <div className="grid grid-rows-[50px_1fr] justify-items-center items-start mt-4">
           <div>Select Product</div>
-          <div className="grid grid-cols-2 grid-rows-2  h-24 items-center justify-items-center gap-12">
+          <div className="grid grid-cols-2 grid-rows-2  items-center justify-items-center gap-4">
             <div
-              className={`border ${selectModel === "Shirt" ? "border-black" : "border-none"} w-[100%] h-[100%] grid items-center justify-items-center rounded-full`}
+              className={`border ${selectModel === "Shirt" ? "border-black" : "border-none"} w-[100%] h-[100%] grid items-center justify-items-center rounded-lg`}
               onClick={() => updateSelectModel("Shirt")}
             >
-              <Image width={120} height={120} src="/shirtModel.png" alt="Shirt" />
+              <Image width={80} height={80} src="/shirtModel.png" alt="Shirt" />
             </div>
             <div
-              className={`border ${selectModel === "Hoodie" ? "border-black" : "border-none"} w-[100%] h-[100%] grid items-center justify-items-center rounded-full`}
+              className={`border ${selectModel === "Hoodie" ? "border-black" : "border-none"} w-[100%] h-[100%] grid items-center justify-items-center rounded-lg`}
               onClick={() => updateSelectModel("Hoodie")}
             >
-              <Image width={120} height={120} src="/hoodieModel.png" alt="Hoodie" />
+              <Image width={80} height={80} src="/hoodieModel.png" alt="Hoodie" />
             </div>
             <div
-              className={`border ${selectModel === "Mug" ? "border-black" : "border-none"} w-[100%] h-[100%] grid items-center justify-items-center rounded-full`}
+              className={`border ${selectModel === "Mug" ? "border-black" : "border-none"} w-[100%] h-[100%] grid items-center justify-items-center rounded-lg`}
               onClick={() => updateSelectModel("Mug")}
             >
-              <Image className="rounded-full" width={120} height={120} src="/mug.png" alt="Mug" />
+              <Image className="rounded-full" width={80} height={80} src="/mug.png" alt="Mug" />
             </div>
             <div
-              className={`border ${selectModel === "Sweatshirt" ? "border-black" : "border-none"} w-[100%] h-[100%] grid items-center justify-items-center rounded-full`}
+              className={`border ${selectModel === "Sweatshirt" ? "border-black" : "border-none"} w-[100%] h-[100%] grid items-center justify-items-center rounded-lg`}
               onClick={() => updateSelectModel("Sweatshirt")}
             >
-              <Image className="rounded-full" width={120} height={120} src="/sweatShirt.png" alt="Sweatshirt" />
+              <Image className="rounded-full" width={80} height={80} src="/sweatShirt.png" alt="Sweatshirt" />
             </div>
           </div>
         </div>
