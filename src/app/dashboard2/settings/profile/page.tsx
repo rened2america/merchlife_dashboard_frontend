@@ -117,31 +117,16 @@ const Profile = () => {
               Change cover
             </div>
           </figure>
-          <figure
-            style={{
-              width: "150px",
-              height: "150px",
-              position: "absolute",
-              top: "236px",
-              left: "0px",
-              right: "0px",
-              textAlign: "center",
-              margin: "0px auto",
-            }}
-          >
+          <figure className="w-[150px] h-[150px] absolute top-[236px] left-0 right-0 text-center my-0 mx-auto">
             <div
+              className={`bg-cover bg-center rounded-full bg-white w-full h-full`}
               style={{
-                backgroundSize: "cover",
                 backgroundImage: data?.data.getArtist.avatar
                   ? `url(${data?.data.getArtist.avatar})`
                   : "url(https://assets.ghost.io/admin/1585/assets/img/user-image-639a88b784fb5f10964be8b975ca9fdf.png)",
-                width: "100%",
-                height: "100%",
-                backgroundPosition: "50%",
-                borderRadius: "9999px",
-                backgroundColor: "white",
               }}
             ></div>
+
             <div
               style={{
                 display: "grid",
@@ -160,313 +145,141 @@ const Profile = () => {
               Change image
             </div>
           </figure>
-          <div
-            style={{
-              border: "1px solid #e6e9eb",
-              marginTop: "144px",
-              display: "grid",
-              gridTemplateRows: "1fr",
-              borderRadius: "12px",
-              padding: "24px",
-            }}
-          >
-            <div
-              style={{
-                borderBottom: "1px solid rgba(55, 53, 47, 0.09)",
-                fontSize: "16px",
-                color: "rgb(55, 53, 47)",
-                marginBottom: "24px",
-                height: "40px",
-                margin: "0 auto",
-                width: "100%",
-                maxWidth: "540px",
-                fontWeight: "700",
-              }}
-            >
+          <div className="border border-[#e6e9eb] mt-[144px] grid grid-rows-1 rounded-[12px] p-[24px]">
+            <div className="border-b border-[#37352f1a] text-[16px] text-[#37352f] mb-[24px] h-[40px] mx-auto w-full max-w-[540px] font-bold">
               My profile
             </div>
-            <fieldset
-              style={{
-                maxWidth: "540px",
-                display: "grid",
-                gridTemplateRows: "100px 100px 100px",
-                gap: "16px",
-                margin: "16px auto",
-                width: "100%",
-              }}
-            >
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateRows: "16px 48px 16px",
-                  alignItems: "center",
-                }}
-              >
+            <fieldset className="max-w-[540px] grid grid-rows-[100px_100px_100px] gap-[16px] my-[16px] mx-auto w-full">
+              <div className="grid grid-rows-[16px_48px_16px] items-center">
                 <label
                   htmlFor="user-name"
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: "500",
-                    color: "#15171a",
-                  }}
+                  className="text-[14px] font-medium text-[#15171a]"
                 >
                   Full name
                 </label>
                 {isLoading ? null : (
                   <input
                     id="user-name"
-                    style={{
-                      height: "40px",
-                      padding: "6px 12px",
-                      border: "1px solid #dddedf",
-                      borderRadius: "4px",
-                      width: "100%",
-                    }}
+                    className="h-[40px] p-[6px_12px] border border-[#dddedf] rounded w-full"
                     {...register("name")}
                     defaultValue={data?.data.getArtist.name}
                   />
                 )}
-                <p
-                  style={{
-                    fontSize: "13px",
-                    fontWeight: "400",
-                    color: "#738393",
-                  }}
-                >
+                <p className="text-[13px] font-normal text-[#738393]">
                   Use your real name so people can recognize you
                 </p>
               </div>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateRows: "16px 48px 16px",
-                  alignItems: "center",
-                }}
-              >
+
+              <div className="grid grid-rows-[16px_48px_16px] items-center">
                 <label
-                  htmlFor="user-name"
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: "500",
-                    color: "#15171a",
-                  }}
+                  htmlFor="user-email"
+                  className="text-[14px] font-medium text-[#15171a]"
                 >
                   Email
                 </label>
                 {isLoading ? null : (
                   <input
-                    id="user-name"
-                    style={{
-                      height: "40px",
-                      padding: "6px 12px",
-                      border: "1px solid #dddedf",
-                      borderRadius: "4px",
-                      width: "100%",
-                    }}
+                    id="user-email"
+                    className="h-[40px] p-[6px_12px] border border-[#dddedf] rounded w-full"
                     disabled
                     value={data?.data.getArtist.email}
                   />
                 )}
-                <p
-                  style={{
-                    fontSize: "13px",
-                    fontWeight: "400",
-                    color: "#738393",
-                  }}
-                >
+                <p className="text-[13px] font-normal text-[#738393]">
                   Used for notifications
                 </p>
               </div>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateRows: "16px 1fr 16px",
-                  alignItems: "center",
-                }}
-              >
+
+              <div className="grid grid-rows-[16px_1fr_16px] items-center">
                 <label
-                  htmlFor="user-name"
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: "500",
-                    color: "#15171a",
-                  }}
+                  htmlFor="user-bio"
+                  className="text-[14px] font-medium text-[#15171a]"
                 >
                   Bio
                 </label>
                 <textarea
-                  id="user-name"
-                  style={{
-                    maxHeight: "100px",
-                    minHeight: "60px",
-                    height: "100%",
-                    padding: "6px 12px",
-                    border: "1px solid #dddedf",
-                    borderRadius: "4px",
-                    width: "100%",
-                  }}
+                  id="user-bio"
+                  className="max-h-[100px] min-h-[60px] h-full p-[6px_12px] border border-[#dddedf] rounded w-full"
                   {...register("bio")}
                   defaultValue={data?.data.getArtist.bio}
                 />
-                <p
-                  style={{
-                    fontSize: "13px",
-                    fontWeight: "400",
-                    color: "#738393",
-                  }}
-                >
+                <p className="text-[13px] font-normal text-[#738393]">
                   Recommended: 200 characters
                 </p>
               </div>
             </fieldset>
 
-            <div
-              style={{
-                borderBottom: "1px solid rgba(55, 53, 47, 0.09)",
-                fontSize: "16px",
-                color: "rgb(55, 53, 47)",
-                marginBottom: "24px",
-                marginTop: "48px",
-                height: "40px",
-                margin: "0 auto",
-                width: "100%",
-                maxWidth: "540px",
-                fontWeight: "700",
-              }}
-            >
+            <div className="border-b border-gray-200 text-lg text-gray-700 mb-[24px] mt-[48px] h-[40px] mx-auto w-full max-w-[540px] font-bold">
               My social media
             </div>
             <fieldset
-              style={{
-                maxWidth: "540px",
-                display: "grid",
-                gridTemplateRows: "100px 100px 100px",
-                gap: "16px",
-                margin: "16px auto",
-                width: "100%",
-              }}
+              className="max-w-[540px] grid grid-rows-[100px_100px_100px] gap-[16px] my-[16px] mx-auto w-full"
+              // style={{
+              //   maxWidth: "540px",
+              //   display: "grid",
+              //   gridTemplateRows: "100px 100px 100px",
+              //   gap: "16px",
+              //   margin: "16px auto",
+              //   width: "100%",
+              // }}
             >
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateRows: "16px 48px 16px",
-                  alignItems: "center",
-                }}
-              >
+              <div className="grid grid-rows-3 gap-2 items-center">
                 <label
                   htmlFor="user-name"
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: "500",
-                    color: "#15171a",
-                  }}
+                  className="text-sm font-medium text-gray-700"
                 >
                   Instagram
                 </label>
                 {isLoading ? null : (
                   <input
                     id="user-name"
-                    style={{
-                      height: "40px",
-                      padding: "6px 12px",
-                      border: "1px solid #dddedf",
-                      borderRadius: "4px",
-                      width: "100%",
-                    }}
+                    className="h-10 px-3 border border-gray-300 rounded w-full"
                     {...register("instagram")}
                     defaultValue={data?.data.getArtist.instagram}
                   />
                 )}
-                <p
-                  style={{
-                    fontSize: "13px",
-                    fontWeight: "400",
-                    color: "#738393",
-                  }}
-                >
+                <p className="text-xs font-normal text-gray-500">
                   URL of your personal Instagram
                 </p>
               </div>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateRows: "16px 48px 16px",
-                  alignItems: "center",
-                }}
-              >
+
+              <div className="grid grid-rows-3 gap-2 items-center">
                 <label
                   htmlFor="user-name"
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: "500",
-                    color: "#15171a",
-                  }}
+                  className="text-sm font-medium text-gray-700"
                 >
                   Facebook
                 </label>
                 {isLoading ? null : (
                   <input
                     id="user-name"
-                    style={{
-                      height: "40px",
-                      padding: "6px 12px",
-                      border: "1px solid #dddedf",
-                      borderRadius: "4px",
-                      width: "100%",
-                    }}
+                    className="h-10 px-3 border border-gray-300 rounded w-full"
                     {...register("facebook")}
                     defaultValue={data?.data.getArtist.facebook}
                   />
                 )}
-                <p
-                  style={{
-                    fontSize: "13px",
-                    fontWeight: "400",
-                    color: "#738393",
-                  }}
-                >
+                <p className="text-xs font-normal text-gray-500">
                   URL of your personal Facebook
                 </p>
               </div>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateRows: "16px 48px 16px",
-                  alignItems: "center",
-                }}
-              >
+
+              <div className="grid grid-rows-3 gap-2 items-center">
                 <label
                   htmlFor="user-name"
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: "500",
-                    color: "#15171a",
-                  }}
+                  className="text-sm font-medium text-gray-700"
                 >
                   Twitter
                 </label>
                 {isLoading ? null : (
                   <input
                     id="user-name"
-                    style={{
-                      height: "40px",
-                      padding: "6px 12px",
-                      border: "1px solid #dddedf",
-                      borderRadius: "4px",
-                      width: "100%",
-                    }}
+                    className="h-10 px-3 border border-gray-300 rounded w-full"
                     {...register("twitter")}
                     defaultValue={data?.data.getArtist.twitter}
                   />
                 )}
-                <p
-                  style={{
-                    fontSize: "13px",
-                    fontWeight: "400",
-                    color: "#738393",
-                  }}
-                >
-                  URL of your personal twitter
+                <p className="text-xs font-normal text-gray-500">
+                  URL of your personal Twitter
                 </p>
               </div>
             </fieldset>
@@ -475,22 +288,7 @@ const Profile = () => {
         <form></form>
       </section>
       <div
-        style={{
-          display: "grid",
-          alignItems: "center",
-          justifyItems: "center",
-          width: "88px",
-          height: "40px",
-          position: "fixed",
-          bottom: "24px",
-          right: "64px",
-          backgroundColor: "black",
-          borderRadius: "8px",
-          color: "white",
-          fontSize: "14px",
-          fontWeight: "700",
-          cursor: "pointer",
-        }}
+        className="grid items-center justify-items-center w-[88px] h-[40px] fixed bottom-[24px] right-[64px] bg-black rounded-md text-white text-lg cursor-pointer"
         onClick={handleSubmit(onSubmit)}
       >
         Save
