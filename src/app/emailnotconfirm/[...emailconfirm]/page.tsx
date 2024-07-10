@@ -6,27 +6,15 @@ export default function EmailNotConfirm() {
   return (
     <>
       <div
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "grid",
-          justifyItems: "center",
-          alignItems: "center",
-        }}
+       className="w-full h-full grid justify-items-center items-center"
       >
         <div
-          style={{
-            fontSize: "24px",
-            fontWeight: "700",
-          }}
+        className="text-2xl font-bold"
         >
           Email Confirmation Needed
         </div>
         <div
-          style={{
-            fontSize: "16px",
-            fontWeight: "500",
-          }}
+        className="text-base font-medium"
         >
           Please check your inbox and click the verification link to activate
           your account.

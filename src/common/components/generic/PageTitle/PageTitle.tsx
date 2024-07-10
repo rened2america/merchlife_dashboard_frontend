@@ -7,13 +7,7 @@ type TPageTitle = {
 export const PageTitle: FC<TPageTitle> = ({ children }) => {
   return (
     <header
-      style={{
-        color: "#15171a",
-        fontSize: "32px",
-        fontWeight: "700",
-        padding: "24px 0px",
-        height: "96px",
-      }}
+     className="text-[#15171a] font-bold text-[32px] py-[24px] px-0 h-[96px]"
     >
       {children}
     </header>

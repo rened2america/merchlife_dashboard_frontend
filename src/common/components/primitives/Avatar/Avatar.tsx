@@ -78,13 +78,14 @@ export const Avatar = () => {
       <DropdownMenu.Portal>
         <DropdownMenu.Content className="DropdownMenuContent" sideOffset={5}>
           <DropdownMenu.Item
-            style={{
-              display: "grid",
-              gridTemplateColumns: "40px 1fr",
-              alignItems: "center",
-              height: "72px",
-              padding: "0 16px",
-            }}
+          className="grid grid-cols-[40px_1fr] items-center h-[72px] py-0 px-[16px]"
+            // style={{
+            //   display: "grid",
+            //   gridTemplateColumns: "40px 1fr",
+            //   alignItems: "center",
+            //   height: "72px",
+            //   padding: "0 16px",
+            // }}
           >
             <AvatarRadix.Root className={styles["avatar-root-size"]}>
               <AvatarRadix.Fallback className={styles["avatar-fallback-size"]}>
@@ -92,19 +93,21 @@ export const Avatar = () => {
               </AvatarRadix.Fallback>
             </AvatarRadix.Root>
             <div
-              style={{
-                display: "grid",
-                gridTemplateRows: "40px 16px",
-                alignItems: "center",
-              }}
+            className="grid grid-rows-[40px_16px] items-center"
+              // style={{
+              //   display: "grid",
+              //   gridTemplateRows: "40px 16px",
+              //   alignItems: "center",
+              // }}
             >
               <div>{getName(isLoading, data?.data.getArtist.name)}</div>
               <div
-                style={{
-                  fontSize: "13px",
-                  color: "#738393",
-                  fontWeight: "400",
-                }}
+              className="text-[13px] text-[#738393] font-normal"
+                // style={{
+                //   fontSize: "13px",
+                //   color: "#738393",
+                //   fontWeight: "400",
+                // }}
               >
                 {getEmail(isLoading, data?.data.getArtist.email)}
               </div>
@@ -113,15 +116,16 @@ export const Avatar = () => {
           <DropdownMenu.Separator className="DropdownMenuSeparator" />
           <DropdownMenu.Item className="DropdownMenuItem">
             <Link
-              style={{
-                width: "100%",
-                height: "100%",
-                display: "grid",
-                alignItems: "center",
-                color: "#394047",
-                fontSize: "16px",
-                fontWeight: "500",
-              }}
+            className="w-full h-full grid items-center text-[#394047] text-[16px] font-medium "
+              // style={{
+              //   width: "100%",
+              //   height: "100%",
+              //   display: "grid",
+              //   alignItems: "center",
+              //   color: "#394047",
+              //   fontSize: "16px",
+              //   fontWeight: "500",
+              // }}
               href={`${process.env
                 .NEXT_PUBLIC_BASE_URL_ECOMMERCE!}artist/${getName(
                 isLoading,
@@ -133,14 +137,15 @@ export const Avatar = () => {
           </DropdownMenu.Item>
           <DropdownMenu.Item className="DropdownMenuItem">
             <Link
-              style={{
-                width: "100%",
-                height: "100%",
-                display: "grid",
-                alignItems: "center",
-                color: "#394047",
-                fontSize: "14px",
-              }}
+            className="w-full h-full grid items-center text-[#394047] text-[14px]"
+              // style={{
+              //   width: "100%",
+              //   height: "100%",
+              //   display: "grid",
+              //   alignItems: "center",
+              //   color: "#394047",
+              //   fontSize: "14px",
+              // }}
               href="/dashboard2/settings/profile"
             >
               Your profile
@@ -149,14 +154,15 @@ export const Avatar = () => {
           <DropdownMenu.Separator className="DropdownMenuSeparator" />
           <DropdownMenu.Item className="DropdownMenuItem">
             <div
-              style={{
-                width: "100%",
-                height: "100%",
-                display: "grid",
-                alignItems: "center",
-                color: "#394047",
-                fontSize: "14px",
-              }}
+            className="w-full h-full grid items-center text-[#394047] text-[14px]"
+              // style={{
+              //   width: "100%",
+              //   height: "100%",
+              //   display: "grid",
+              //   alignItems: "center",
+              //   color: "#394047",
+              //   fontSize: "14px",
+              // }}
               onClick={() => {
                 refetch();
               }}

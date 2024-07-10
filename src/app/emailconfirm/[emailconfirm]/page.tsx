@@ -22,37 +22,18 @@ export default function EmailNotConfirm() {
   if (isError) {
     return (
       <div
-        style={{
-          height: "100vh",
-          width: "100%",
-          display: "grid",
-          placeItems: "center",
-        }}
+      className="h-[100vh] w-[100vh] grid place-content-center"
       >
         <div
-          style={{
-            width: "400px",
-            height: "200px",
-            display: "grid",
-            justifyItems: "center",
-            alignItems: "center",
-          }}
+        className="w-[400px] h-[200px] grid justify-items-center items-center "
         >
           <div
-            style={{
-              fontSize: "24px",
-              fontWeight: "700",
-              textAlign: "center",
-            }}
+          className="text-[24px] font-bold text-center"
           >
             Email Confirmation Needed
           </div>
           <div
-            style={{
-              fontSize: "16px",
-              fontWeight: "500",
-              textAlign: "center",
-            }}
+          className="text-[16px] font-medium text-center"
           >
             Please check your inbox and click the verification link to activate
             your account.
@@ -64,61 +45,29 @@ export default function EmailNotConfirm() {
 
   return (
     <div
-      style={{
-        height: "100vh",
-        width: "100%",
-        display: "grid",
-        placeItems: "center",
-      }}
+    className="h-[100vh] w-full grid place-items-center"
     >
       <div
-        style={{
-          width: "400px",
-          height: "200px",
-          display: "grid",
-          justifyItems: "center",
-          alignItems: "center",
-        }}
+      className="w-[400px] h-[200px] grid justify-items-center items-center"
       >
         <div
-          style={{
-            fontSize: "24px",
-            fontWeight: "700",
-            color: "#14af67",
-          }}
+        className="text-2xl font-bold text-[#14af67]"
         >
           Congratulations!
         </div>
         <div
-          style={{
-            width: "64px",
-            height: "64px",
-            borderRadius: "64px",
-            border: "2px solid #14af67",
-            display: "grid",
-            placeItems: "center",
-            color: "#14af67",
-          }}
+        className="w-[64px] h-[64px] rounded-[64px] border-2 border-solid border-[#14af67] grid place-items-center text-[#14af67]"
         >
           <MailIcon />
         </div>
         <div
-          style={{
-            fontSize: "16px",
-            fontWeight: "500",
-            textAlign: "center",
-          }}
+        className="text-base font-medium text-center"
         >
           You have confirmed you email successfully and now ready to log in to
           your account
         </div>
         <div
-          style={{
-            color: "#14af67",
-            cursor: "pointer",
-            fontWeight: "600",
-            fontSize: "16px",
-          }}
+        className="text-[#14af67] cursor-pointer font-semibold text-base"
           onClick={() => {
             router.push("/login");
           }}

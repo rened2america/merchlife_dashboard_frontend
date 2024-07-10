@@ -214,14 +214,6 @@ const Profile = () => {
             </div>
             <fieldset
               className="max-w-[540px] grid grid-rows-[100px_100px_100px] gap-[16px] my-[16px] mx-auto w-full"
-              // style={{
-              //   maxWidth: "540px",
-              //   display: "grid",
-              //   gridTemplateRows: "100px 100px 100px",
-              //   gap: "16px",
-              //   margin: "16px auto",
-              //   width: "100%",
-              // }}
             >
               <div className="grid grid-rows-3 gap-2 items-center">
                 <label

@@ -58,12 +58,9 @@ const PreviewImage = ({ imageFile }: { imageFile: string }) => {
   console.log(modifiedImageUrl);
 
   return (
-    <div
-      style={{
-        display: "none",
-      }}
+    <div className="hidden"
     >
-      <canvas style={{ width: "200px" }} ref={canvasRef} />
+      <canvas className="w-[200px]" ref={canvasRef} />
     </div>
   );
 };

@@ -21,15 +21,18 @@ const Gallery = () => {
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [shouldCreatePoster, setShouldCreatePoster] = useState(false);
   const [shouldCreateCanvas, setShouldCreateCanvas] = useState(false);
-  const [useAIForImage, setuseAIForImage] = useState(true)
+  const [useAIForImage, setuseAIForImage] = useState(true);
   const [imageCrop, setImageCrop] = useState(null);
-  const onCropComplete = (croppedArea:any, croppedAreaPixels:any) => {
+  const onCropComplete = (croppedArea: any, croppedAreaPixels: any) => {
     console.log(croppedArea, croppedAreaPixels);
     setCroppedAreaPixels(croppedAreaPixels);
   };
   const showCroppedImage = async () => {
     try {
-      const croppedImage:any = await getCroppedImg(urlImage, croppedAreaPixels);
+      const croppedImage: any = await getCroppedImg(
+        urlImage,
+        croppedAreaPixels
+      );
       console.log("croppedImage", croppedImage);
       fetch(croppedImage)
         .then((res) => res.blob())
@@ -50,7 +53,7 @@ const Gallery = () => {
   const { getInputProps, acceptedFiles, getRootProps, fileRejections } =
     useDropzone({
       multiple: false,
-      maxFiles:1,
+      maxFiles: 1,
       maxSize: 31457280,
       accept: {
         "image/*": [],
@@ -64,7 +67,7 @@ const Gallery = () => {
       },
     });
 
-  const handleSubmit = (imageCrop:any) => {
+  const handleSubmit = (imageCrop: any) => {
     if (selectedFile && imageName) {
       const formData = new FormData();
       formData.append("art", selectedFile);
@@ -86,8 +89,8 @@ const Gallery = () => {
   };
 
   const toggleUseAIForImage = () => {
-    setuseAIForImage(!useAIForImage)
-  }
+    setuseAIForImage(!useAIForImage);
+  };
 
   useEffect(() => {
     if (!isLoadingArt) {
@@ -107,56 +110,12 @@ const Gallery = () => {
         {useAIForImage ? "Upload a custom image" : "Generate an Image using AI"}
       </button>
       <div className="grid md:grid-cols-1 lg:grid-cols-[1fr,300px] gap-12">
-      <div className="w-full grid grid-cols-[repeat(auto-fill,minmax(120px,1fr))] gap-4 my-4">
-      {data &&
-            data.data.gallery.map((img: any) => {
-              return (
-                <div key={img.id}>
-               <div className="w-[120px] h-[180px] relative bg-[#F8F9F9] grid grid-rows-[1fr_100px] border rounded-sm">
-                <Image
-                      key={img.id}
-                      src={img.urlImage}
-                      layout="fill"
-                      objectFit="contain"
-                      alt={img.name}
-                    />
-                  </div>
-                  <h2 className="text-lg font-semibold mt-2">  {img.name}
-                  </h2>
-                </div>
-              );
-            })}
-        </div>
-
-{/* <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 250px",
-        }}
-      > */}
-        {/* <div
-          style={{
-            width: "100%",
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))",
-            gap: "16px",
-            margin: "16px 0",
-          }}
-        >
+        <div className="w-full grid grid-cols-[repeat(auto-fill,minmax(120px,1fr))] gap-4 my-4">
           {data &&
             data.data.gallery.map((img: any) => {
               return (
                 <div key={img.id}>
-                  <div
-                    style={{
-                      width: "120px",
-                      height: "180px",
-                      position: "relative",
-                      backgroundColor: "rgb(248, 249, 249)",
-                      display: "grid",
-                      gridTemplateRows: "1fr 100px",
-                    }}
-                  >
+                  <div className="w-[120px] h-[180px] relative bg-[#F8F9F9] grid grid-rows-[1fr_100px] border rounded-sm">
                     <Image
                       key={img.id}
                       src={img.urlImage}
@@ -165,20 +124,11 @@ const Gallery = () => {
                       alt={img.name}
                     />
                   </div>
-                  <h2
-                    style={{
-                      fontSize: "16px",
-                      fontWeight: "500",
-                    }}
-                  >
-                    {img.name}
-                  </h2>
+                  <h2 className="text-lg font-semibold mt-2"> {img.name}</h2>
                 </div>
               );
             })}
-            
-        </div> */}
-
+        </div>
 
         <div className="grid gap-4 bg-gray-900 p-6 rounded-lg">
           {useAIForImage ? (
@@ -236,12 +186,34 @@ const Gallery = () => {
               </div>
               <div className="mt-4 space-y-2">
                 <div>
-                  <input type="checkbox" id="shouldCreatePoster" name="shouldCreatePoster" checked={shouldCreatePoster} onChange={handlePosterChange} />
-                  <label htmlFor="shouldCreatePoster" className="text-white ml-2">Create Poster</label>
+                  <input
+                    type="checkbox"
+                    id="shouldCreatePoster"
+                    name="shouldCreatePoster"
+                    checked={shouldCreatePoster}
+                    onChange={handlePosterChange}
+                  />
+                  <label
+                    htmlFor="shouldCreatePoster"
+                    className="text-white ml-2"
+                  >
+                    Create Poster
+                  </label>
                 </div>
                 <div>
-                  <input type="checkbox" id="shouldCreateCanvas" name="shouldCreateCanvas" checked={shouldCreateCanvas} onChange={handleCanvasChange} />
-                  <label htmlFor="shouldCreateCanvas" className="text-white ml-2">Create Canvas</label>
+                  <input
+                    type="checkbox"
+                    id="shouldCreateCanvas"
+                    name="shouldCreateCanvas"
+                    checked={shouldCreateCanvas}
+                    onChange={handleCanvasChange}
+                  />
+                  <label
+                    htmlFor="shouldCreateCanvas"
+                    className="text-white ml-2"
+                  >
+                    Create Canvas
+                  </label>
                 </div>
               </div>
               <button

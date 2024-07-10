@@ -21,40 +21,12 @@ export const CardColor: FC<{ color: string; colorName: string }> = ({
   const updateColor = useProductStore((state) => state.updateColor);
   return (
     <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "1fr 40px",
-        alignItems: "center",
-        justifyItems: "center",
-        marginTop: "16px",
-      }}
+    className="grid grid-cols-[1fr_40px]  items-center  justify-items-center mt-[16px]"
+  
     >
       <div
-        style={
-          colorsSelected[color]
-            ? {
-                display: "grid",
-                gridTemplateColumns: "32px 1fr",
-                alignItems: "center",
-                justifyItems: "center",
-                padding: "8px 16px",
-                border: "1px solid black",
-                borderRadius: "16px",
-                cursor: "pointer",
-                width: "100%",
-              }
-            : {
-                display: "grid",
-                gridTemplateColumns: "32px 1fr",
-                alignItems: "center",
-                justifyItems: "center",
-                padding: "8px 16px",
-                border: "1px solid white",
-                borderRadius: "16px",
-                cursor: "pointer",
-                width: "100%",
-              }
-        }
+      className={`grid grid-cols-[32px_1fr]  justify-items-center items-center py-[8px] px-[16px] border rounded-xl w-full cursor-pointer  ${colorsSelected[color] ? 'border-black' : 'border-white'}`}
+    
         onClick={() => {
           if (color != "white") {
             updateColorsSelected(color);
@@ -62,21 +34,15 @@ export const CardColor: FC<{ color: string; colorName: string }> = ({
         }}
       >
         <div
+        className={` h-[32px] w-[32px] rounded-full border border-black`}
           style={{
             backgroundColor: DEFAULT_COLORS[color],
-            height: "32px",
-            width: "32px",
-            borderRadius: "40px",
-            border: "1px solid black",
           }}
         ></div>
         <div>{colorName}</div>
       </div>
       <div
-        style={{
-          display: "grid",
-          cursor: "pointer",
-        }}
+      className="grid cursor-pointer"
         onClick={() => {
           updateColor(DEFAULT_COLORS[color]);
         }}

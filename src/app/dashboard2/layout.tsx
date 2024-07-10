@@ -46,12 +46,7 @@ const NewLayout: FC<NewLayout> = ({ children }) => {
   if (profileLoading || loading) {
     return (
       <div
-        style={{
-          display: "grid",
-          placeItems: "center",
-          height: "100vh",
-          width: "100%",
-        }}
+      className="grid place-items-center h-[100vh] w-full"
       >
         <SyncLoader loading={profileLoading || loading} />
       </div>

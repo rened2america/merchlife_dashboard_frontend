@@ -14,51 +14,24 @@ export const LastOrders = ({ orders }) => {
 
   return (
     <div
-      style={{
-        display: "grid",
-        gridTemplateRows: "100px 1fr",
-        marginTop: "40px",
-        justifyItems: "center",
-        alignItems: "center",
-      }}
+    className="grid grid-rows-[100px_1fr] mt-[40px] justify-items-center items-center"
     >
       <div
-        style={{
-          fontSize: "16px",
-          fontWeight: "700",
-        }}
+      className="font-base font-bold"
       >
         Recently orders
       </div>
-      <div
-        style={{
-          width: "100%",
-        }}
+      <div className="w-full"
       >
         {orders.slice(Math.max(orders.length - 10, 0)).map((order) => {
           return (
             <div
               key={order.id}
-              style={{
-                display: "grid",
-                width: "100%",
-                gridTemplateColumns: "48px 1fr 1fr 1fr 150px",
-                justifyItems: "center",
-                alignItems: "center",
-                fontSize: "14px",
-                fontWeight: "700",
-                height: "80px",
-              }}
+              className="grid w-full grid-cols-[48px_1fr_1fr_1fr_150px] justify-items-center items-center font-sm font-bold h-[80px]"
             >
               <div>
                 <div
-                  style={{
-                    borderRadius: "48px",
-                    width: "48px",
-                    height: "48px",
-                    display: "grid",
-                    placeItems: "center",
-                  }}
+                className="rounded-[48px] w-[48px] h-[48px] grid place-items-center"
                 >
                   {order.name.slice(0, 2)}
                 </div>
@@ -67,13 +40,7 @@ export const LastOrders = ({ orders }) => {
               <div>{order.email}</div>
               <div>{order.name}</div>
               <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "24px 1fr",
-
-                  justifyItems: "center",
-                  alignItems: "center",
-                }}
+              className="grid grid-cols-[24px_1fr] justify-items-center items-center"
               >
                 <ClockIcon /> {transformDate(order.createdAt)}
               </div>

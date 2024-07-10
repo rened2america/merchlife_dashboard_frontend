@@ -14,10 +14,7 @@ export const SelectColor = () => {
   return (
     <MenuPropertiesLayout>
       <MenuPropertiesLayoutTitle>Select Colors</MenuPropertiesLayoutTitle>
-      <div
-        style={{
-          padding: "0 8px",
-        }}
+      <div className="py-0 px-[8px]"
       >
         <CardColor color="white" colorName="White" />
         <CardColor color="beige" colorName="Beige" />
@@ -31,11 +28,7 @@ export const SelectColor = () => {
       colorsSelected.blue &&
       colorsSelected.black ? (
         <div
-          style={{
-            fontSize: "13px",
-            fontWeight: "700",
-            textAlign: "center",
-          }}
+        className="text-[13px] text-center"
         >
           All colors selected
         </div>
