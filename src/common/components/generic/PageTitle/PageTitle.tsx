@@ -11,7 +11,7 @@ export const PageTitle: FC<TPageTitle> = ({ children }) => {
         color: "#15171a",
         fontSize: "32px",
         fontWeight: "700",
-        padding: "24px 0px",
+        padding: "24px 0px 0px",
         height: "96px",
       }}
     >
