@@ -31,7 +31,7 @@ export default function GlobalLayout({
       <div className={styles.nav}>
         <Flex align="center" justify="center">
           <div className={styles.logo}>
-            <Avatar size="2" src="/LogoBlack.png" fallback="R" />
+            <Avatar size="2" src="/logo.png" fallback="R" />
           </div>
         </Flex>
         <div className={styles.sectionMenu}>

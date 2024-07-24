@@ -117,7 +117,7 @@ const NewLayout: FC<NewLayout> = ({ children }) => {
           <div
           className="grid grid-cols-[40px_1fr] items-center"
           >
-            <Image height={32} width={28} src='/LogoBlack.png' alt="logo"/>
+            <Image height={32} width={28} src='/logo.png' alt="logo"/>
             <div
             className="overflow-hidden text-ellipsis whitespace-nowrap text-[0.94rem] tracking-normal leading-5 font-bold text-   w-[120px]" 
             >

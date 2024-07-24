@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 const initialState = {
-  imgLogo: "/LogoBlack.png",
+  imgLogo: "/logo.png",
   imgBase64Logo: "",
   groupId: null,
   imgProduct: {

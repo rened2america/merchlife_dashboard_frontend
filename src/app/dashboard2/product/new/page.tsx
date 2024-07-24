@@ -38,7 +38,7 @@ const NewProdut = () => {
       errorText = errorText + ", Max 3 tags";
     }
 
-    if (imgLogo === "/LogoBlack.png") {
+    if (imgLogo === "/logo.png") {
       isError = true;
       errorText = errorText + ", Logo";
     }
