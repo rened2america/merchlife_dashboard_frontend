@@ -8,11 +8,22 @@ import {
   useUploadAvatar,
   useUploadBanner,
 } from "./useProfile";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { IconUpload } from "@/common/components/icons/IconUpload";
+import Cropper from "react-easy-crop";
+import BeatLoader from "react-spinners/BeatLoader";
+import getCroppedImg from "./cropImage";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+
 const Profile = () => {
+  const [selectedBanner, setSelectedBanner] = useState(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [urlImage, setUrlImage] = useState(null);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const {
     register,
     handleSubmit,
@@ -25,7 +36,7 @@ const Profile = () => {
   const { refetch, data, isLoading } = useGetProfile();
   const { mutate: uploadAvatar, isSuccess: isSuccessAvatar } =
     useUploadAvatar();
-  const { mutate: uploadBanner, isSuccess: isSuccessBanner } =
+  const { mutate: uploadBanner, isSuccess: isSuccessBanner, isLoading: isLoadingBanner } =
     useUploadBanner();
   const {
     getInputProps: getInputPropsAvatar,
@@ -45,7 +56,9 @@ const Profile = () => {
 
   const {
     getInputProps: getInputPropsBanner,
+    acceptedFiles,
     getRootProps: getRootPropsBanner,
+    fileRejections
   } = useDropzone({
     multiple: false,
     accept: {
@@ -53,9 +66,10 @@ const Profile = () => {
     },
     onDrop: (acceptedFiles) => {
       console.log("acceptedFiles", acceptedFiles[0]);
-      const formData = new FormData();
-      formData.append("banner", acceptedFiles[0]);
-      uploadBanner(formData);
+      if (acceptedFiles[0]) {
+        setUrlImage(URL.createObjectURL(acceptedFiles[0]));
+        setSelectedBanner(acceptedFiles[0]);
+      }
     },
   });
   useEffect(() => {
@@ -76,6 +90,35 @@ const Profile = () => {
       });
     }
   }, [isSuccess]);
+
+  const onCropComplete = (croppedArea, croppedAreaPixels) => {
+    console.log(croppedArea, croppedAreaPixels);
+    setCroppedAreaPixels(croppedAreaPixels);
+
+  }
+
+  const showCroppedImage = async () => {
+    try {
+      const croppedImage = await getCroppedImg(urlImage, croppedAreaPixels);
+      console.log("croppedImage", croppedImage);
+      fetch(croppedImage)
+        .then((res) => res.blob())
+        .then((blob) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(blob);
+          reader.onloadend = function () {
+            const base64data = reader.result;
+            const formData = new FormData();
+            formData.append("banner", base64data);
+            console.log("banner", base64data)
+            uploadBanner(formData);
+          };
+        });
+      setUrlImage(croppedImage);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   return (
     <PageLayout>
@@ -98,24 +141,69 @@ const Profile = () => {
                 : "url(https://assets.ghost.io/admin/1585/assets/img/user-cover-e8f42b12b5fcba292a8b5dfa81e13dd2.png)",
             }}
           >
-            <div
-              style={{
-                display: "grid",
-                alignItems: "center",
-                justifyItems: "center",
-                margin: "16px 16px",
-                padding: "8px 16px",
-                backgroundColor: "rgba(0,0,0,0.5)",
-                color: "white",
-                position: "absolute",
-                borderRadius: "4px",
-                cursor: "pointer",
-              }}
-              {...getRootPropsBanner({ className: "dropzone" })}
-            >
-              <input {...getInputPropsBanner()} />
-              Change cover
-            </div>
+            <Dialog>
+              <DialogTrigger className="text-white bg-black mx-4 my-4 px-4 py-2 ">Change cover</DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>
+                    <div {...getRootPropsBanner({ className: "dropzone w-40 text-white bg-black hover:bg-gray-800 cursor-pointer mx-4 my-4 px-4 py-2" })}>
+                      <input {...getInputPropsBanner()} />
+                      Upload Banner
+                    </div>
+                  </DialogTitle>
+                  <DialogDescription>
+                    <div>
+                      {acceptedFiles.length > 0 ? (
+                        <span className="flex justify-center">{acceptedFiles[0].path}</span>
+                      ) : fileRejections.length > 0 &&
+                        fileRejections[0].errors[0].code === "file-too-large" ? (
+                        <div className="text-red-600 font-bold">
+                          File is larger than 30 Mb
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      <div className="text-white">Aspect Ratio 5/2</div>
+                      <div className="relative h-64">
+                        {urlImage && (
+                          <Cropper
+                            image={urlImage}
+                            crop={crop}
+                            zoom={zoom}
+                            aspect={5 / 2}
+                            onCropChange={setCrop}
+                            onCropComplete={onCropComplete}
+                            onZoomChange={setZoom}
+                          />
+                        )}
+                      </div>
+                      <input
+                        type="range"
+                        value={zoom}
+                        min={1}
+                        max={3}
+                        step={0.1}
+                        onChange={(e) => setZoom(e.target.value)}
+                        className="w-full mt-2"
+                      />
+                      <div className="flex justify-center mt-4">
+                        <button
+                          onClick={showCroppedImage}
+                          className="p-2 text-sm font-medium text-white bg-blue-600 rounded border border-blue-600 hover:bg-blue-700"
+                        >
+                          {isLoadingBanner ? (
+                            <BeatLoader loading={isLoadingBanner} color="white" size={16} />
+                          ) : (
+                            "Confirm"
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
+
           </figure>
           <figure className="w-[150px] h-[150px] absolute top-[236px] left-0 right-0 text-center my-0 mx-auto">
             <div
@@ -214,14 +302,6 @@ const Profile = () => {
             </div>
             <fieldset
               className="max-w-[540px] grid grid-rows-[100px_100px_100px] gap-[16px] my-[16px] mx-auto w-full"
-              // style={{
-              //   maxWidth: "540px",
-              //   display: "grid",
-              //   gridTemplateRows: "100px 100px 100px",
-              //   gap: "16px",
-              //   margin: "16px auto",
-              //   width: "100%",
-              // }}
             >
               <div className="grid grid-rows-3 gap-2 items-center">
                 <label
