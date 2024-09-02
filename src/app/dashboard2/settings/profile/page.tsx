@@ -12,14 +12,13 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { IconUpload } from "@/common/components/icons/IconUpload";
 import Cropper from "react-easy-crop";
 import BeatLoader from "react-spinners/BeatLoader";
 import getCroppedImg from "./cropImage";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 const Profile = () => {
-  const [selectedBanner, setSelectedBanner] = useState(null);
+  const [operationFor, setOperationFor] = useState(""); // Can be either banner or avatar
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [urlImage, setUrlImage] = useState(null);
@@ -27,51 +26,53 @@ const Profile = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
   const { mutate: updateProfile, isSuccess } = useUpdateProfile();
   const onSubmit = (data: any) => updateProfile(data);
 
   const { refetch, data, isLoading } = useGetProfile();
-  const { mutate: uploadAvatar, isSuccess: isSuccessAvatar } =
+  const { mutate: uploadAvatar, isSuccess: isSuccessAvatar, isLoading: isLoadingAvatar } =
     useUploadAvatar();
   const { mutate: uploadBanner, isSuccess: isSuccessBanner, isLoading: isLoadingBanner } =
     useUploadBanner();
+
   const {
-    getInputProps: getInputPropsAvatar,
-    getRootProps: getRootPropsAvatar,
+    getInputProps: getInputPropsBanner,
+    acceptedFiles: acceptedFilesBanner,
+    getRootProps: getRootPropsBanner,
+    fileRejections: fileRejectionsBanner
   } = useDropzone({
     multiple: false,
     accept: {
       "image/*": [],
     },
-    onDrop: (acceptedFiles) => {
-      console.log("acceptedFiles", acceptedFiles[0]);
-      const formData = new FormData();
-      formData.append("avatar", acceptedFiles[0]);
-      uploadAvatar(formData);
+    onDrop: (acceptedFilesBanner) => {
+      if (acceptedFilesBanner[0]) {
+        setUrlImage(URL.createObjectURL(acceptedFilesBanner[0]));
+        setOperationFor("banner")
+      }
     },
   });
 
   const {
-    getInputProps: getInputPropsBanner,
-    acceptedFiles,
-    getRootProps: getRootPropsBanner,
-    fileRejections
+    getInputProps: getInputPropsAvatar,
+    acceptedFiles: acceptedFilesAvatar,
+    getRootProps: getRootPropsAvatar,
+    fileRejections: fileRejectionsAvatar
   } = useDropzone({
     multiple: false,
     accept: {
       "image/*": [],
     },
-    onDrop: (acceptedFiles) => {
-      console.log("acceptedFiles", acceptedFiles[0]);
-      if (acceptedFiles[0]) {
-        setUrlImage(URL.createObjectURL(acceptedFiles[0]));
-        setSelectedBanner(acceptedFiles[0]);
+    onDrop: (acceptedFilesAvatar) => {
+      if (acceptedFilesAvatar[0]) {
+        setUrlImage(URL.createObjectURL(acceptedFilesAvatar[0]));
+        setOperationFor("avatar")
       }
     },
   });
+
   useEffect(() => {
     refetch();
   }, [isSuccessAvatar, isSuccessBanner]);
@@ -92,15 +93,12 @@ const Profile = () => {
   }, [isSuccess]);
 
   const onCropComplete = (croppedArea, croppedAreaPixels) => {
-    console.log(croppedArea, croppedAreaPixels);
     setCroppedAreaPixels(croppedAreaPixels);
-
-  }
+  };
 
   const showCroppedImage = async () => {
     try {
       const croppedImage = await getCroppedImg(urlImage, croppedAreaPixels);
-      console.log("croppedImage", croppedImage);
       fetch(croppedImage)
         .then((res) => res.blob())
         .then((blob) => {
@@ -109,9 +107,13 @@ const Profile = () => {
           reader.onloadend = function () {
             const base64data = reader.result;
             const formData = new FormData();
-            formData.append("banner", base64data);
-            console.log("banner", base64data)
-            uploadBanner(formData);
+            if (operationFor === "banner") {
+              formData.append("banner", base64data);
+              uploadBanner(formData);
+            } else if (operationFor === "avatar") {
+              formData.append("avatar", base64data);
+              uploadAvatar(formData);
+            }
           };
         });
       setUrlImage(croppedImage);
@@ -124,25 +126,59 @@ const Profile = () => {
     <PageLayout>
       <PageTitle>{data?.data.getArtist.name}</PageTitle>
       <section>
-        <form
-          style={{
-            position: "relative",
-            display: "grid",
-            gridTemplateRows: "300px 1fr",
-          }}
-        >
+        <form>
           <figure
             style={{
               backgroundRepeat: "no-repeat",
               backgroundPosition: "center",
-              position: "relative",
+              backgroundSize: "cover",
+              position: "relative",  // Make the banner container relative
+              width: "100%",
+              maxWidth: "1200px", // Optional maximum width
+              height: "0",
+              paddingTop: "25%", // Aspect ratio control (e.g., 25% for 4:1 ratio)
+              margin: "0 auto",
               backgroundImage: data?.data.getArtist.banner
                 ? `url(${data?.data.getArtist.banner})`
                 : "url(https://assets.ghost.io/admin/1585/assets/img/user-cover-e8f42b12b5fcba292a8b5dfa81e13dd2.png)",
             }}
           >
+            {/* Avatar Container */}
+            <div
+              style={{
+                position: "absolute",
+                top: "100%",  // Position at the bottom of the banner
+                left: "50%",
+                transform: "translate(-50%, -50%)",  // Center the avatar horizontally and move it up vertically
+                width: "15vw",  // Responsive width relative to viewport width
+                maxWidth: "150px",  // Maximum width for the avatar
+                height: "15vw",  // Responsive height, keeping it square
+                maxHeight: "150px",  // Maximum height for the avatar
+                borderRadius: "50%",  // Ensure it's a circle
+                backgroundColor: "#fff",  // Optional background color for avatar container
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <div
+                className={`bg-cover bg-center rounded-full`}
+                style={{
+                  backgroundImage: data?.data.getArtist.avatar
+                    ? `url(${data?.data.getArtist.avatar})`
+                    : "url(https://assets.ghost.io/admin/1585/assets/img/user-image-639a88b784fb5f10964be8b975ca9fdf.png)",
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "50%",  // Ensures the avatar itself is a circle
+                }}
+              ></div>
+            </div>
+          </figure>
+
+          {/* Dialog Trigger Buttons */}
+          <div className="flex w-full mt-16 sm:mt-24 md:mt-24 justify-center space-x-4">
             <Dialog>
-              <DialogTrigger className="text-white bg-black mx-4 my-4 px-4 py-2 ">Change cover</DialogTrigger>
+              <DialogTrigger className="text-white bg-black px-4 py-2 rounded">Change cover</DialogTrigger>
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>
@@ -153,10 +189,10 @@ const Profile = () => {
                   </DialogTitle>
                   <DialogDescription>
                     <div>
-                      {acceptedFiles.length > 0 ? (
-                        <span className="flex justify-center">{acceptedFiles[0].path}</span>
-                      ) : fileRejections.length > 0 &&
-                        fileRejections[0].errors[0].code === "file-too-large" ? (
+                      {acceptedFilesBanner.length > 0 ? (
+                        <span className="flex justify-center">{acceptedFilesBanner[0].path}</span>
+                      ) : fileRejectionsBanner.length > 0 &&
+                        fileRejectionsBanner[0].errors[0].code === "file-too-large" ? (
                         <div className="text-red-600 font-bold">
                           File is larger than 30 Mb
                         </div>
@@ -203,37 +239,71 @@ const Profile = () => {
                 </DialogHeader>
               </DialogContent>
             </Dialog>
+            <Dialog>
+              <DialogTrigger className="text-white bg-black px-4 py-2 rounded">Change Avatar</DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>
+                    <div {...getRootPropsAvatar({ className: "dropzone w-fit text-white bg-black hover:bg-gray-800 cursor-pointer mx-4 my-4 px-4 py-2" })}>
+                      <input {...getInputPropsAvatar()} />
+                      Upload profile photo
+                    </div>
+                  </DialogTitle>
+                  <DialogDescription>
+                    <div>
+                      {acceptedFilesAvatar.length > 0 ? (
+                        <span className="flex justify-center">{acceptedFilesAvatar[0].path}</span>
+                      ) : fileRejectionsAvatar.length > 0 &&
+                        fileRejectionsAvatar[0].errors[0].code === "file-too-large" ? (
+                        <div className="text-red-600 font-bold">
+                          File is larger than 30 Mb
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      <div className="text-white">Aspect Ratio 1/1</div>
+                      <div className="relative h-64">
+                        {urlImage && (
+                          <Cropper
+                            image={urlImage}
+                            crop={crop}
+                            zoom={zoom}
+                            aspect={1 / 1}
+                            onCropChange={setCrop}
+                            onCropComplete={onCropComplete}
+                            onZoomChange={setZoom}
+                          />
+                        )}
+                      </div>
+                      <input
+                        type="range"
+                        value={zoom}
+                        min={1}
+                        max={3}
+                        step={0.1}
+                        onChange={(e) => setZoom(e.target.value)}
+                        className="w-full mt-2"
+                      />
+                      <div className="flex justify-center mt-4">
+                        <button
+                          onClick={showCroppedImage}
+                          className="p-2 text-sm font-medium text-white bg-blue-600 rounded border border-blue-600 hover:bg-blue-700"
+                        >
+                          {isLoadingAvatar ? (
+                            <BeatLoader loading={isLoadingAvatar} color="white" size={16} />
+                          ) : (
+                            "Confirm"
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
+          </div>
 
-          </figure>
-          <figure className="w-[150px] h-[150px] absolute top-[236px] left-0 right-0 text-center my-0 mx-auto">
-            <div
-              className={`bg-cover bg-center rounded-full bg-white w-full h-full`}
-              style={{
-                backgroundImage: data?.data.getArtist.avatar
-                  ? `url(${data?.data.getArtist.avatar})`
-                  : "url(https://assets.ghost.io/admin/1585/assets/img/user-image-639a88b784fb5f10964be8b975ca9fdf.png)",
-              }}
-            ></div>
-
-            <div
-              style={{
-                display: "grid",
-                alignItems: "center",
-                justifyItems: "center",
-                padding: "8px 16px",
-                backgroundColor: "rgba(0,0,0,0.5)",
-                color: "white",
-                borderRadius: "4px",
-                marginTop: "8px",
-                cursor: "pointer",
-              }}
-              {...getRootPropsAvatar({ className: "dropzone" })}
-            >
-              <input {...getInputPropsAvatar()} />
-              Change image
-            </div>
-          </figure>
-          <div className="border border-[#e6e9eb] mt-[144px] grid grid-rows-1 rounded-[12px] p-[24px]">
+          <div className="border border-[#e6e9eb] mt-10 grid grid-rows-1 p-4">
             <div className="border-b border-[#37352f1a] text-[16px] text-[#37352f] mb-[24px] h-[40px] mx-auto w-full max-w-[540px] font-bold">
               My profile
             </div>
@@ -365,7 +435,6 @@ const Profile = () => {
             </fieldset>
           </div>
         </form>
-        <form></form>
       </section>
       <div
         className="grid items-center justify-items-center w-[88px] h-[40px] fixed bottom-[24px] right-[64px] bg-black rounded-md text-white text-lg cursor-pointer"
