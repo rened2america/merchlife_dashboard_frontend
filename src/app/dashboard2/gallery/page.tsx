@@ -10,6 +10,7 @@ import Cropper from "react-easy-crop";
 import getCroppedImg from "./cropImage";
 import BeatLoader from "react-spinners/BeatLoader";
 import GenerateAIImage from "./GenerateAIImage";
+import BuyCredits from "./BuyCredits";
 const Gallery = () => {
   const { mutate, isLoading: isLoadingArt } = useUploadArt();
   const { data, isLoading, refetch } = useGetGallery();
@@ -139,7 +140,10 @@ const Gallery = () => {
           </button>
           <div className="grid gap-4 bg-gray-900 p-6 rounded-lg text-white">
             {useAIForImage ? (
-              <GenerateAIImage onImageGenerated={handleAIGeneratedImage} />
+              data?.data.credits > 0 ?
+              <BuyCredits/>
+              :
+              <GenerateAIImage onImageGenerated={handleAIGeneratedImage} availableCredits={data?.data.credits}/>
             ) : (
               <div>
                 <h3 className='text-white mb-2 text-center'>Upload Custom Image</h3>

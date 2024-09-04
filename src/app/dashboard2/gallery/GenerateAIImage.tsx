@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { FaCoins } from "react-icons/fa6";
 
-const GenerateAIImage = ({ onImageGenerated }) => {
+
+const GenerateAIImage = ({ onImageGenerated, availableCredits }) => {
   const [loading, setLoading] = useState(false);
   const [textPrompt, setTextPrompt] = useState("");
   const [imageName, setImageName] = useState("");
@@ -59,6 +61,14 @@ const GenerateAIImage = ({ onImageGenerated }) => {
     <div className="rounded-lg">
       <form>
         <h3 className='text-white mb-2 text-center'>Generate AI Image</h3>
+        <h4 className="flex items-center my-2">
+          Available credits:
+          <span className="flex items-center ml-2">
+            {availableCredits}
+            <FaCoins className="ml-1" />
+          </span>
+        </h4>
+
         <div className="flex flex-col gap-4 text-white">
           <div>
             <label htmlFor="imageName" className='text-white text-sm'>Title</label>
