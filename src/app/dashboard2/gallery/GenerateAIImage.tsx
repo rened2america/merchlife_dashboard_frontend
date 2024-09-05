@@ -1,6 +1,6 @@
+import axios from '@/service/axiosInstance';
 import { useState } from 'react';
 import { FaCoins } from "react-icons/fa6";
-
 
 const GenerateAIImage = ({ onImageGenerated, availableCredits }) => {
   const [loading, setLoading] = useState(false);
@@ -10,56 +10,39 @@ const GenerateAIImage = ({ onImageGenerated, availableCredits }) => {
   async function fetchImage(e) {
     e.preventDefault();
     setLoading(true);
-    const formData = new FormData();
-    formData.append("prompt", textPrompt);
-    formData.append("output_format", "webp");
-    formData.append("aspect_ratio", "2:3");
-    let apiKey = process.env.NEXT_PUBLIC_STABILITY_AI_API_KEY;
-    console.log("apiKey: ", apiKey)
-    const requestOptions = {
-      method: "POST",
-      body: formData,
-      headers: {
-        Authorization:
-          `Bearer ${apiKey}`,
-        Accept: "image/*",
-      },
-    };
 
     try {
-      const response = await fetch(
-        "https://api.stability.ai/v2beta/stable-image/generate/core",
-        requestOptions
-      );
+      const response = await fetch(`/api/generate-image`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: textPrompt, imageName }),
+      });
 
-      if (!response.ok) {
-        throw new Error(`${response.status}: ${await response.text()}`);
+      const data = await response.json();
+      if (data.error) {
+        console.error(data.error);
+        throw new Error(data.error);
       }
+ 
+      // Deduct one credit on every image generation
+      await axios.patch(`product/generateImage`);
 
-      const imageBuffer = await response.arrayBuffer();
-      const buffer = Buffer.from(imageBuffer);
-      const blob = new Blob([buffer], { type: "image/png" });
-      onImageGenerated(imageName, blob);
+      // Convert the base64 string back into a Blob
+      const base64Response = await fetch(`data:image/webp;base64,${data.image}`);
+      const blob = await base64Response.blob();
+
+      onImageGenerated(imageName, blob); // Pass the ObjectURL instead of base64
+
     } catch (error) {
-      console.error("Error fetching image:", error);
+      console.error("Error generating image:", error);
     } finally {
       setLoading(false);
     }
   }
 
-  const getTextPrompt = (e) => {
-    console.log(e);
-    setTextPrompt(e.target.value);
-  };
-
-  const getImageName = (e) => {
-    console.log(e);
-    setImageName(e.target.value);
-  };
-
   return (
     <div className="rounded-lg">
-      <form>
+      <form onSubmit={fetchImage}>
         <h3 className='text-white mb-2 text-center'>Generate AI Image</h3>
         <h4 className="flex items-center my-2">
           Available credits:
@@ -78,31 +61,31 @@ const GenerateAIImage = ({ onImageGenerated, availableCredits }) => {
               className="p-2 w-full text-sm bg-gray-800 rounded border border-gray-600"
               placeholder="Cute Dog.."
               required
-              onChange={getImageName}
+              value={imageName}
+              onChange={(e) => setImageName(e.target.value)}
             />
           </div>
           <div>
-            <div className="relative w-full">
-              <label htmlFor="prompt" className='text-white text-sm'>Prompt</label>
-              <textarea
-                id='prompt'
-                className="p-2 w-full text-sm bg-gray-800 rounded border border-gray-600"
-                placeholder="Cute dog with big ears on mars..."
-                required
-                onChange={getTextPrompt}
-              />
-            </div>
-            <button
-              onClick={fetchImage}
-              className="w-full p-2 mt-2 text-sm bg-gray-800 rounded border border-gray-400 hover:bg-gray-900"
-            >
-              {loading ? "Generating..." : "Generate Image"}
-            </button>
+            <label htmlFor="prompt" className='text-white text-sm'>Prompt</label>
+            <textarea
+              id='prompt'
+              className="p-2 w-full text-sm bg-gray-800 rounded border border-gray-600"
+              placeholder="Cute dog with big ears on mars..."
+              required
+              value={textPrompt}
+              onChange={(e) => setTextPrompt(e.target.value)}
+            />
           </div>
+          <button
+            type="submit"
+            className="w-full p-2 mt-2 text-sm bg-gray-800 rounded border border-gray-400 hover:bg-gray-900"
+          >
+            {loading ? "Generating..." : "Generate Image"}
+          </button>
         </div>
       </form>
     </div>
-    )
-}
+  );
+};
 
 export default GenerateAIImage;
