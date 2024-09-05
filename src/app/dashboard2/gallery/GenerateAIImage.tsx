@@ -1,6 +1,6 @@
-import axios from '@/service/axiosInstance';
 import { useState } from 'react';
 import { FaCoins } from "react-icons/fa6";
+import BeatLoader from 'react-spinners/BeatLoader';
 
 const GenerateAIImage = ({ onImageGenerated, availableCredits }) => {
   const [loading, setLoading] = useState(false);
@@ -12,10 +12,11 @@ const GenerateAIImage = ({ onImageGenerated, availableCredits }) => {
     setLoading(true);
 
     try {
-      const response = await fetch(`/api/generate-image`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_BACKEND}product/generateImage`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt: textPrompt, imageName }),
+        credentials: "include"
       });
 
       const data = await response.json();
@@ -23,9 +24,6 @@ const GenerateAIImage = ({ onImageGenerated, availableCredits }) => {
         console.error(data.error);
         throw new Error(data.error);
       }
- 
-      // Deduct one credit on every image generation
-      await axios.patch(`product/generateImage`);
 
       // Convert the base64 string back into a Blob
       const base64Response = await fetch(`data:image/webp;base64,${data.image}`);
@@ -80,7 +78,7 @@ const GenerateAIImage = ({ onImageGenerated, availableCredits }) => {
             type="submit"
             className="w-full p-2 mt-2 text-sm bg-gray-800 rounded border border-gray-400 hover:bg-gray-900"
           >
-            {loading ? "Generating..." : "Generate Image"}
+            {loading ? <BeatLoader color='white' /> : "Generate Image"}
           </button>
         </div>
       </form>

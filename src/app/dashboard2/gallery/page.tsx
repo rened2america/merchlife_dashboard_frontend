@@ -15,6 +15,7 @@ import SyncLoader from "react-spinners/SyncLoader";
 const Gallery = () => {
   const { mutate, isLoading: isLoadingArt } = useUploadArt();
   const { data, isLoading: isLoadingGallery, refetch } = useGetGallery();
+  const availableCredits = data?.data.credits;
   const [imageName, setImageName] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -98,6 +99,7 @@ const Gallery = () => {
     setImageName(imageName)
     setAiGeneratedImage(image);
     setUrlImage(URL.createObjectURL(image));
+    refetch()
   };
 
   useEffect(() => {
@@ -143,8 +145,8 @@ const Gallery = () => {
             </button>
             <div className="grid gap-4 bg-gray-900 p-6 rounded-lg text-white">
               {useAIForImage ? (
-                data?.data.credits > 0 ?
-                  <GenerateAIImage onImageGenerated={handleAIGeneratedImage} availableCredits={data?.data.credits} />
+                availableCredits > 0 ?
+                  <GenerateAIImage onImageGenerated={handleAIGeneratedImage} availableCredits={availableCredits} />
                   :
                   <BuyCredits />
               ) : (
@@ -186,8 +188,8 @@ const Gallery = () => {
                   </div>
                 </div>
               )}
-              {(data?.data.credits === 0 && useAIForImage) ?
-                <></> 
+              {(availableCredits === 0 && useAIForImage) ?
+                <></>
                 :
                 <>
                   <div className="mt-4 space-y-2">
