@@ -20,7 +20,7 @@ const BuyCredits = () => {
             <div className='my-4'>
                 <Label className='text-base'>
                     <span className="flex items-center justify-center ml-2">
-                        Buy Packs of 30 credits
+                        Buy Packs of 20 credits
                         <FaCoins className="ml-1" />
                     </span>
                 </Label>
