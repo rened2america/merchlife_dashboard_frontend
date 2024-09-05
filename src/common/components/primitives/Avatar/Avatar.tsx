@@ -8,7 +8,7 @@ import "./nstyle.css";
 import { useGetSignout } from "@/service/queryHooks/useSignout";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useGetProfile } from "@/app/dashboard2/settings/profile/useProfile";
+import { useGetProfile } from "@/app/dashboard/settings/profile/useProfile";
 export const Avatar = () => {
   const { isSuccess, refetch } = useGetSignout();
   const { data, isLoading } = useGetProfile();
@@ -141,7 +141,7 @@ export const Avatar = () => {
                 color: "#394047",
                 fontSize: "14px",
               }}
-              href="/dashboard2/settings/profile"
+              href="/dashboard/settings/profile"
             >
               Your profile
             </Link>

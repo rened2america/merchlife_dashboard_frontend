@@ -11,7 +11,7 @@ import { useDropzone } from "react-dropzone";
 import { IconUpload } from "../../icons/IconUpload";
 import { useEffect, useState } from "react";
 import PreviewImage from "../PreviewImage/PreviewImage";
-import { useGetGallery } from "@/app/dashboard2/gallery/useGallery";
+import { useGetGallery } from "@/app/dashboard/gallery/useGallery";
 // import PreviewImage from "../PreviewImage/PreviewImage";
 
 export const DesignProperties = () => {

@@ -19,13 +19,13 @@ export default function Login() {
 
   // useEffect(() => {
   //   if (userIsLogin) {
-  //     router.push("/dashboard2");
+  //     router.push("/dashboard");
   //   }
   // }, [userIsLogin]);
 
   useEffect(() => {
     if (isSuccess) {
-      router.push("/dashboard2");
+      router.push("/dashboard");
     }
   }, [isSuccess]);
 

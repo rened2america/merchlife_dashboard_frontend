@@ -26,7 +26,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
   React.useEffect(() => {
     if (isSuccess) {
-      router.push("/dashboard2");
+      router.push("/dashboard");
     }
   }, [isSuccess]);
 

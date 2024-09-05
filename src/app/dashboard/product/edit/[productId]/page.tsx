@@ -2,7 +2,7 @@
 import {
   useGetProduct,
   useUpdateProduct,
-} from "@/app/dashboard2/products/useProduct";
+} from "@/app/dashboard/products/useProduct";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -81,7 +81,7 @@ const EditProduct = ({ params }: { params: { productId: string } }) => {
         <div className="flex justify-between items-center  mb-8">
           <div
             className="flex items-center space-x-2 cursor-pointer"
-            onClick={() => router.push("/dashboard2/products")}
+            onClick={() => router.push("/dashboard/products")}
           >
             <ArrowLeftIcon className="w-6 h-6" />
             <span className="text-lg">Products</span>

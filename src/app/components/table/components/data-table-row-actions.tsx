@@ -26,7 +26,7 @@ import {
 import { labels } from "../data/data";
 import { taskSchema } from "../data/schema";
 import { useRouter } from "next/navigation";
-import { useDeleteProduct } from "@/app/dashboard2/products/useProduct";
+import { useDeleteProduct } from "@/app/dashboard/products/useProduct";
 import { useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -63,7 +63,7 @@ export function DataTableRowActions<TData>({
       <DropdownMenuContent>
         <DropdownMenuItem
           onClick={() => {
-            router.push(`/dashboard2/product/edit/${row.original.id}`);
+            router.push(`/dashboard/product/edit/${row.original.id}`);
           }}
           align="end"
           className="w-[80px]"

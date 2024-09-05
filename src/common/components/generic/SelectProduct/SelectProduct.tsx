@@ -6,7 +6,7 @@ import { minimumPrices, useProductStore } from "@/store/productStore";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { TagsInput } from "react-tag-input-component";
-import "../../../../app/dashboard2/product/edit/[productId]/edit.css";
+import "../../../../app/dashboard/product/edit/[productId]/edit.css";
 import Image from "next/image";
 
 export const SelectProduct = () => {

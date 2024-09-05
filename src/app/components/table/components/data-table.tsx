@@ -136,7 +136,7 @@ export function DataTable<TData, TValue>({
                         Go create your first product
                       </div>
                       <div className="text-center w-full font-bold bg-yellow-200 w-4/5 h-10 rounded-md">
-                        <Link href="/dashboard2/product/new" className="w-full h-full grid place-items-center">
+                        <Link href="/dashboard/product/new" className="w-full h-full grid place-items-center">
                           Create product
                         </Link>
                       </div>
