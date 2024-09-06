@@ -1,4 +1,4 @@
-const BASE_URL = "https://politicozen-backend.onrender.com/api/1/";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL_BACKEND;
 
 export const fetchInstance = () => {
   const post = async (url: string, body: object) => {

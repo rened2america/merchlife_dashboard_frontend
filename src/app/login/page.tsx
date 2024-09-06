@@ -71,7 +71,7 @@ export default function Login() {
             href={process.env.NEXT_PUBLIC_BASE_URL_ECOMMERCE!}
             className="relative z-20 flex items-center text-lg font-medium"
           >
-            Politicozen
+            <Image height={64} width={56} src='/logo.png' alt="logo" />
           </Link>
         </div>
         <div className="lg:p-8">
