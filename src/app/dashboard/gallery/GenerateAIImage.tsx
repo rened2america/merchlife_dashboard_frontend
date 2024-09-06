@@ -12,7 +12,7 @@ const GenerateAIImage = ({ onImageGenerated, availableCredits }) => {
     setLoading(true);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_BACKEND}product/generateImage`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_BACKEND}/product/generateImage`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt: textPrompt, imageName }),
