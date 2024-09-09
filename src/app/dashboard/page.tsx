@@ -25,13 +25,15 @@ const NewHome = () => {
   const { data } = useGetProducts();
   const { data: orders, isLoading } = useGetOrders();
   const [dataValue, setDatavalue] = useState(initialData);
-
+  const convertCentsToDollars = (cents: string) => {
+    return (parseInt(cents) / 100)
+  }
   const DashboardCard = [
     {
       name: "Total Revenue",
       bgcolor: "bg-yellow-200",
       textColor: "text-black",
-      data: orders?.data.amount,
+      data: convertCentsToDollars(orders?.data.amount),
     },
     {
       name: "Total Sales",
@@ -78,7 +80,7 @@ const NewHome = () => {
       <div className="w-full mt-16">
         <Chart data={dataValue}></Chart>
       </div>
-      <div>{!isLoading && <LastOrders orders={orders?.data.orders} />}</div>
+      <div className="hidden md:block">{!isLoading && <LastOrders orders={orders?.data.orders} />}</div>
     </PageLayout>
   );
 };

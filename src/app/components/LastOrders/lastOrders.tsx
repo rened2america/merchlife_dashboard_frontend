@@ -1,5 +1,4 @@
 "use client";
-import { Avatar } from "@radix-ui/react-avatar";
 import { ClockIcon } from "@radix-ui/react-icons";
 
 export const LastOrders = ({ orders }) => {
@@ -28,27 +27,28 @@ export const LastOrders = ({ orders }) => {
           fontWeight: "700",
         }}
       >
-        Recently orders
+        Recent orders
       </div>
       <div
         style={{
           width: "100%",
         }}
       >
-        {orders.slice(Math.max(orders.length - 10, 0)).map((order) => {
+        {orders.slice(Math.max(orders.length - 10, 0)).map((order, index) => {
           return (
             <div
               key={order.id}
               style={{
                 display: "grid",
                 width: "100%",
-                gridTemplateColumns: "48px 1fr 1fr 1fr 150px",
+
                 justifyItems: "center",
                 alignItems: "center",
                 fontSize: "14px",
                 fontWeight: "700",
                 height: "80px",
               }}
+              className="md:grid-cols-[48px_1fr_1fr_1fr_150px] lg:grid-cols-[48px_1fr_1fr_1fr_1fr_150px]"
             >
               <div>
                 <div
@@ -60,12 +60,13 @@ export const LastOrders = ({ orders }) => {
                     placeItems: "center",
                   }}
                 >
-                  {order.name.slice(0, 2)}
+                  {index + 1}
                 </div>
               </div>
               <div>{order.productName}</div>
+              <div>${order.amount / 100}</div>
               <div>{order.email}</div>
-              <div>{order.name}</div>
+              <div className="md:hidden lg:block">{order.name}</div>
               <div
                 style={{
                   display: "grid",
