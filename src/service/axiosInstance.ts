@@ -28,8 +28,10 @@ axiosClient.interceptors.response.use(
 
     if (error.response.status === 401) {
       console.log("error.response.status === 401", error);
-      window.location.href = "/login";
+      // window.location.href = "/login";
+      // return error;
     }
+    return Promise.reject(error)
   }
 );
 export default axiosClient;

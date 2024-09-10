@@ -1,63 +1,101 @@
 "use client";
 
 import * as React from "react";
-
 import { cn } from "@/lib/utils";
 // import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useUserLogin } from "@/app/login/useUserLogin";
-import { useRouter } from "next/navigation";
 import { useUserRegister } from "@/app/register/useUserRegister";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 import SyncLoader from "react-spinners/SyncLoader";
+import { z } from "zod";
 
-interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
+// Define the Zod schema for registration data
+const userSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  name: z.string().min(3, "Name must be at least 3 characters long"),
+  password: z.string()
+    .min(8, "Password must be at least 8 characters long")
+    .max(32, "Password cannot exceed 32 characters")
+    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+    .regex(/[0-9]/, "Password must contain at least one number")
+    .regex(/[^A-Za-z0-9]/, "Password must contain at least one special character"),
+});
+
+interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
+
 export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
-  const {
-    data,
-    isLoading,
-    mutate: registerUser,
-    isSuccess,
-    isError,
-  } = useUserRegister();
+  const { data, isLoading, mutate: registerUser, isSuccess, isError, error } = useUserRegister();
+  const router = useRouter();
+
+  // React Hook Form setup
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => registerUser({ ...data });
 
-  const router = useRouter();
+  const [zodError, setZodError] = React.useState<string | null>(null);
+  const [registrationError, setRegistrationError] = React.useState<string | null>(null);
 
+  // Handle form submission
+  const onSubmit = (formData: any) => {
+    setZodError(null); // Reset Zod validation errors
+    setRegistrationError(null); // Reset registration errors
+
+    // Perform Zod validation manually
+    const result = userSchema.safeParse(formData);
+
+    if (!result.success) {
+      // Set the Zod validation error
+      setZodError(result.error.issues[0].message);
+      return; // Don't proceed with submission if Zod validation fails
+    }
+
+    // If validation is successful, proceed with registration
+    registerUser(result.data);
+  };
+
+  // Handle success: Redirect to login after successful registration
   React.useEffect(() => {
     if (isSuccess) {
       router.push("/login");
     }
   }, [isSuccess]);
 
+  // Handle errors after the mutation completes
+  React.useEffect(() => {
+    if (isError && error) {
+      setRegistrationError(error.response?.data?.message || "An unknown error occurred.");
+    }
+  }, [isError, error]);
+
   return (
     <div className={cn("grid gap-6", className)} {...props}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid gap-2">
+          {/* Name field */}
           <div className="grid gap-1">
-            <Label className="sr-only" htmlFor="email">
+            <Label className="sr-only" htmlFor="name">
               Name
             </Label>
             <Input
               id="name"
               placeholder="Patrick Jane"
-              type="name"
+              type="text"
               autoCapitalize="none"
               autoComplete="name"
               autoCorrect="off"
               disabled={isLoading}
-              {...register("name", { required: true, min: 3 })}
+              {...register("name", { required: "Name is required" })}
             />
-            {errors.name && <span>name is required, min 3 letters </span>}
+            {errors.name && <span className="text-red-400">{errors.name.message}</span>}
           </div>
+
+          {/* Email field */}
           <div className="grid gap-1">
             <Label className="sr-only" htmlFor="email">
               Email
@@ -70,10 +108,12 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
               autoComplete="email"
               autoCorrect="off"
               disabled={isLoading}
-              {...register("email", { required: true })}
+              {...register("email", { required: "Email is required" })}
             />
-            {errors.email && <span>email is required</span>}
+            {errors.email && <span className="text-red-400">{errors.email.message}</span>}
           </div>
+
+          {/* Password field */}
           <div className="grid gap-1">
             <Label className="sr-only" htmlFor="password">
               Password
@@ -86,16 +126,19 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
               autoComplete="password"
               autoCorrect="off"
               disabled={isLoading}
-              {...register("password", { required: true })}
+              {...register("password", { required: "Password is required" })}
             />
-            {errors.password && <span>password is required</span>}
+            {errors.password && <span className="text-red-400">{errors.password.message}</span>}
           </div>
+
+          {/* Display Zod validation error */}
+          {zodError && <span className="text-red-400">{zodError}</span>}
+
+          {/* Display backend registration error */}
+          {registrationError && <span className="text-red-400">{registrationError}</span>}
+
           <Button disabled={isLoading}>
-            {isLoading ? (
-              <SyncLoader loading={isLoading} color="white" />
-            ) : (
-              "Create Account"
-            )}
+            {isLoading ? <SyncLoader loading={isLoading} color="white" /> : "Create Account"}
           </Button>
         </div>
       </form>
