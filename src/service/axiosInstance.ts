@@ -23,7 +23,8 @@ axiosClient.interceptors.response.use(
       error.response.status === 403 &&
       error.response.data.message === "verify artist"
     ) {
-      window.location.href = "/verifyartist/token";
+      // window.location.href = "/verifyartist/token"; //Use this if we keep admin verification
+      window.location.href = "/emailconfirm/token"; 
     }
 
     if (error.response.status === 401) {
