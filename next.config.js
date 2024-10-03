@@ -11,6 +11,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "politicozen-prod.s3.us-east-2.amazonaws.com",
       },
+      {
+        protocol: "https",
+        hostname: "merchlife-content.s3.us-east-2.amazonaws.com",
+      },
     ],
   },
   typescript: {
