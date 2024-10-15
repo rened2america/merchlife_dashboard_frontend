@@ -255,15 +255,24 @@ export const DesignProperties = () => {
               value={groupId ? groupId : ""}
               onChange={async (e) => {
                 const idNumber = parseInt(e.target.value);
+                // Need these when someone clicks on select art
+                if(!idNumber){
+                  return
+                }
+                
                 const selectImage = data.data.gallery.find((image: any) => {
                   return image.id === idNumber;
                 });
                 updateGroupId(selectImage.id);
-                const response = await fetch(selectImage.urlImage);
-                const imageBlob = await response.blob();
-
-                updateImgBase64Logo(URL.createObjectURL(imageBlob));
-                setImgURL(URL.createObjectURL(imageBlob));
+                try {
+                  const response = await fetch(selectImage.urlImage);
+                  console.log("dakho che bhai: ", response)
+                  const imageBlob = await response.blob();
+                  updateImgBase64Logo(URL.createObjectURL(imageBlob));
+                  setImgURL(URL.createObjectURL(imageBlob));
+                } catch (error) {
+                  console.log("Error occured: ", error)
+                }
               }}
             >
               <option value="">*Select Art</option>

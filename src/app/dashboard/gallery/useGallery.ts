@@ -10,7 +10,9 @@ const postUploadArt = async (data: any) => {
     })
     .then((res) => {
       return res;
-    });
+    }).catch((error) => {
+      console.log("Error occured: ", error)
+    })
 
   return res;
 };
