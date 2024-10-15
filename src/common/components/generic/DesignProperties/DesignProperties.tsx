@@ -47,6 +47,8 @@ export const DesignProperties = () => {
     (state) => state.updateImgBase64Logo
   );
   const updateScale = useProductStore((state) => state.updateScale);
+  const updatePosition = useProductStore((state) => state.updatePosition);
+  const updateAngle = useProductStore((state) => state.updateAngle);
   const scale = useProductStore((state) => state.scale);
   const position = useProductStore((state) => {
     return {
@@ -113,7 +115,11 @@ export const DesignProperties = () => {
                 }}
                 value={position.x}
                 type="number"
-                step="0.001"
+                step="0.5"
+                onChange={(e) => {
+                  const updatedX = parseFloat(e.target.value);
+                  updatePosition({ ...position, x: updatedX });
+                }}
               />
             </div>
             <div
@@ -132,9 +138,13 @@ export const DesignProperties = () => {
                   appearance: "none",
                   backgroundColor: "#f8f9f9",
                 }}
-                step="0.001"
+                step="0.5"
                 value={position.y}
                 type="number"
+                onChange={(e) => {
+                  const updatedY = parseFloat(e.target.value);
+                  updatePosition({ ...position, y: updatedY });
+                }}
               />
             </div>
           </div>
@@ -181,6 +191,8 @@ export const DesignProperties = () => {
                 }}
                 value={angle}
                 type="number"
+                step="0.1"
+                onChange={(e) => updateAngle(parseFloat(e.target.value))}
               />
             </div>
           </div>
@@ -225,6 +237,7 @@ export const DesignProperties = () => {
               }}
               value={scale}
               type="number"
+              onChange={(e) => updateScale(parseFloat(e.target.value))}
             />
           </form>
         </div>
