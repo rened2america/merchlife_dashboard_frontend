@@ -123,7 +123,7 @@ export const Avatar = () => {
                 fontWeight: "500",
               }}
               href={`${process.env
-                .NEXT_PUBLIC_BASE_URL_ECOMMERCE!}artist/${getName(
+                .NEXT_PUBLIC_BASE_URL_ECOMMERCE!}store/d/${getName(
                 isLoading,
                 data?.data.getArtist.name.replace(/ /g, "-")
               )}/?page=1`}
