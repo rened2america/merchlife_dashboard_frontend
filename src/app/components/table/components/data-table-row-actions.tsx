@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  DotsHorizontalIcon,
   Pencil2Icon,
   TrashIcon,
   DotsVerticalIcon
@@ -13,18 +12,10 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
   DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { labels } from "../data/data";
-import { taskSchema } from "../data/schema";
 import { useRouter } from "next/navigation";
 import { useDeleteProduct } from "@/app/dashboard/products/useProduct";
 import { useEffect } from "react";
@@ -65,8 +56,6 @@ export function DataTableRowActions<TData>({
           onClick={() => {
             router.push(`/dashboard/product/edit/${row.original.id}`);
           }}
-          align="end"
-          className="w-[80px]"
         >
           Edit
           <DropdownMenuShortcut>

@@ -97,12 +97,12 @@ const EditProduct = ({ params }: { params: { productId: string } }) => {
         </div>
        
         <div className="grid w-full grid-cols-1 lg:grid-cols-12 items-start gap-x-6 gap-y-8 sm:grid-cols-24 lg:gap-x-8">
-          <div className="aspect-h-3 aspect-w-2 overflow-hidden h-full rounded-lg bg-gray-100 sm:col-span-4 lg:col-span-5">
+          <div className="overflow-hidden h-full rounded-lg bg-gray-100 sm:col-span-4 lg:col-span-5">
             <Image
               src={data?.data.productFromDb.design[0].url}
-              width="700"
-              height="700"
-              className="object-fill object-center h-full"
+              width={700}
+              height={700}
+              className="object-contain object-center w-full h-full"
               alt={data?.data.productFromDb.title}
             />
           </div>
