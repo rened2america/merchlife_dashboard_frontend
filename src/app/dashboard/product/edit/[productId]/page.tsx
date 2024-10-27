@@ -30,9 +30,57 @@ const EditProduct = ({ params }: { params: { productId: string } }) => {
     formState: { errors },
   } = useForm();
   const [selected, setSelected] = useState<string[]>([]);
-  const onSubmit = (data:any) => mutate({ ...data, tags: selected });
-  const [selectedColor, setSelectedColor] = useState(null);
-  const [selectedSize, setSelectedSize] = useState(null);
+  const onSubmit = (data: any) => mutate({ ...data, tags: selected });
+
+  // Initialize selectedColor as a string
+  const [selectedColor, setSelectedColor] = useState<string>("White");
+
+  // Get product types
+  const productTypes = data?.data.productFromDb.types.map((type: any) =>
+    type.value.toLowerCase()
+  );
+
+  // Check if the product is a poster or canvas
+  const isPosterOrCanvas =
+    productTypes?.includes("poster") || productTypes?.includes("canvas");
+
+  // Adjust selectedDesign calculation
+  let selectedDesign;
+
+  if (isPosterOrCanvas) {
+    // For posters or canvases, use the first design available
+    selectedDesign = data?.data.productFromDb.design[0];
+  } else {
+    // For other products, find the design based on selectedColor
+    selectedDesign = data?.data.productFromDb.design.find(
+      (designItem: any) =>
+        designItem.variant.toLowerCase() === selectedColor.toLowerCase()
+    );
+  }
+
+  // Adjust availableSizes calculation
+  let availableSizes;
+
+  if (isPosterOrCanvas) {
+    // For posters or canvases, get all unique sizes
+    availableSizes = [
+      ...new Set(
+        data?.data.productFromDb.design.map(
+          (designItem: any) => designItem.size
+        )
+      ),
+    ];
+  } else {
+    // For other products, get sizes based on selected color
+    availableSizes = data?.data.productFromDb.design
+      .filter(
+        (designItem: any) =>
+          designItem.variant.toLowerCase() === selectedColor.toLowerCase()
+      )
+      .map((designItem: any) => designItem.size);
+
+    availableSizes = [...new Set(availableSizes)];
+  }
 
   useEffect(() => {
     if (!isLoading) {
@@ -46,14 +94,16 @@ const EditProduct = ({ params }: { params: { productId: string } }) => {
 
   useEffect(() => {
     if (isSuccessGetProduct) {
-      const tagList = data?.data.productFromDb.tag.map((tag:any) => tag.value);
+      const tagList = data?.data.productFromDb.tag.map((tag: any) => tag.value);
       if (tagList) {
         setSelected(tagList);
       }
-      setSelectedColor(data?.data.productFromDb.colors[0]);
-      setSelectedSize(data?.data.productFromDb.sizes[0]);
+      // Set the default selected color
+      if (!isPosterOrCanvas) {
+        setSelectedColor(data?.data.productFromDb.colors[0].value);
+      }
     }
-  }, [isSuccessGetProduct]);
+  }, [isSuccessGetProduct, data]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -71,35 +121,36 @@ const EditProduct = ({ params }: { params: { productId: string } }) => {
     );
   }
 
-  function classNames(...classes:string[]) {
+  function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(" ");
   }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-6xl bg-white rounded-lg shadow-lg p-8  ">
-        <div className="flex justify-between items-center  mb-8">
+      <div className="w-full max-w-6xl bg-white rounded-lg shadow-lg p-8">
+        <div className="flex justify-between items-center mb-8">
           <div
             className="flex items-center space-x-2 cursor-pointer"
             onClick={() => router.push("/dashboard/products")}
           >
             <ArrowLeftIcon className="w-6 h-6" />
             <span className="text-lg">Products</span>
-            <h2 className="text-xl font-bold">/{data?.data.productFromDb.title}</h2>
-
+            <h2 className="text-xl font-bold">
+              /{data?.data.productFromDb.title}
+            </h2>
           </div>
           <button
-             onClick={handleSubmit(onSubmit)}
+            onClick={handleSubmit(onSubmit)}
             className="px-4 py-2 bg-black text-white rounded-lg"
           >
             Save
           </button>
         </div>
-       
+
         <div className="grid w-full grid-cols-1 lg:grid-cols-12 items-start gap-x-6 gap-y-8 sm:grid-cols-24 lg:gap-x-8">
           <div className="overflow-hidden h-full rounded-lg bg-gray-100 sm:col-span-4 lg:col-span-5">
             <Image
-              src={data?.data.productFromDb.design[0].url}
+              src={selectedDesign?.url}
               width={700}
               height={700}
               className="object-contain object-center w-full h-full"
@@ -163,14 +214,15 @@ const EditProduct = ({ params }: { params: { productId: string } }) => {
                   </span>
                   /280
                 </div>
-                {errors.description && errors.description.type === "maxLength" && (
-                  <span role="alert" className="text-red-500 text-sm">
-                    Max length exceeded
-                  </span>
-                )}
+                {errors.description &&
+                  errors.description.type === "maxLength" && (
+                    <span role="alert" className="text-red-500 text-sm">
+                      Max length exceeded
+                    </span>
+                  )}
               </div>
-              <div className=" m-0">
-                <label className=" m-0 block text-sm font-medium text-gray-700">
+              <div className="m-0">
+                <label className="m-0 block text-sm font-medium text-gray-700">
                   Tags
                 </label>
                 {selected && (
@@ -189,64 +241,55 @@ const EditProduct = ({ params }: { params: { productId: string } }) => {
                 </p>
               </div>
             </form>
-            <fieldset aria-label="Choose a color" className="mt-4">
-              <legend className="text-sm font-medium text-gray-900">Color</legend>
 
-              <RadioGroup
-                value={selectedColor}
-                onChange={setSelectedColor}
-                className="mt-4 flex items-center space-x-3"
-              >
-                {data?.data.productFromDb.colors &&
-                  data?.data.productFromDb.colors.map((color:any) => (
-                    <Radio
-                      key={color.id}
-                      value={color}
-                      aria-label={color.value}
-                      className="relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 focus:outline-none data-[checked]:ring-2 data-[focus]:data-[checked]:ring data-[focus]:data-[checked]:ring-offset-1"
-                    >
-                      <span
-                        aria-hidden="true"
-                        style={{ backgroundColor: color.value }}
-                        className=" h-8 w-8 rounded-full border border-opacity-10"
-                      />
-                    </Radio>
-                  ))}
-              </RadioGroup>
-            </fieldset>
-            <fieldset aria-label="Choose a size" className="mt-10">
-              <div className="flex items-center justify-between">
-                <div className="text-sm font-medium text-gray-900">Size</div>
-                <a
-                  href="#"
-                  className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+            {/* Conditionally render color selection */}
+            {!isPosterOrCanvas && (
+              <fieldset aria-label="Choose a color" className="mt-4">
+                <legend className="text-sm font-medium text-gray-900">Color</legend>
+
+                <RadioGroup
+                  value={selectedColor}
+                  onChange={setSelectedColor}
+                  className="mt-4 flex items-center space-x-3"
                 >
-                  Size guide
-                </a>
-              </div>
+                  {data?.data.productFromDb.colors &&
+                    data?.data.productFromDb.colors.map((color: any) => (
+                      <Radio
+                        key={color.id}
+                        value={color.value}
+                        aria-label={color.value}
+                        className={classNames(
+                          selectedColor === color.value
+                            ? "ring-2 ring-offset-1 ring-black"
+                            : "",
+                          "relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 focus:outline-none"
+                        )}
+                      >
+                        <span
+                          aria-hidden="true"
+                          style={{ backgroundColor: color.value.toLowerCase() }}
+                          className="h-8 w-8 rounded-full border border-black border-opacity-10"
+                        />
+                      </Radio>
+                    ))}
+                </RadioGroup>
+              </fieldset>
+            )}
 
-              <RadioGroup
-                value={selectedSize}
-                onChange={setSelectedSize}
-                className="mt-4 grid grid-cols-4 gap-4"
-              >
-                {data?.data.productFromDb.sizes &&
-                  data?.data.productFromDb.sizes.map((size:any) => (
-                    <Radio
-                      key={size.id}
-                      value={size.value}
-                      className="cursor-pointer bg-white text-gray-900 shadow-sm group relative flex items-center justify-center rounded-md border px-4 py-3 text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none data-[focus]:ring-2 data-[focus]:ring-indigo-500 sm:flex-1"
-                    >
-                      <span>{size.value}</span>
-                      <span
-                        aria-hidden="true"
-                        className="pointer-events-none absolute -inset-px rounded-md border-2 border-transparent group-data-[focus]:border group-data-[checked]:border-indigo-500"
-                      />
-                    </Radio>
-                  ))}
-              </RadioGroup>
+            {/* Display Available Sizes */}
+            <fieldset aria-label="Available sizes" className="mt-10">
+              <div className="text-sm font-medium text-gray-900">Available Sizes</div>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {availableSizes.map((size: string) => (
+                  <span
+                    key={size}
+                    className="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium uppercase"
+                  >
+                    {size}
+                  </span>
+                ))}
+              </div>
             </fieldset>
-          
           </div>
         </div>
       </div>
