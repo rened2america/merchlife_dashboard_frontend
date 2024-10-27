@@ -28,7 +28,7 @@ const DEFAULT_COLORS = {
   black: "#313131",
 };
 
-export const Object3D = (props: any) => {
+export const TShirt = (props: any) => {
   const gl = useThree((state) => state.gl);
   const [pos, setXYZ] = useState([0, 0, 0.1]);
   const [rot, setRot] = useState([0, 0, 0]);
@@ -243,7 +243,7 @@ export const Object3D = (props: any) => {
         {...props}
         material-aoMapIntensity={1}
         dispose={null}
-        scale={1.5}
+        scale={1.22}
       >
         {save ? null : (
           <group position={[0, 0, 0.5]}>

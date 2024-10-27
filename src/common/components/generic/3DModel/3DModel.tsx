@@ -1,7 +1,6 @@
 "use client";
-import { Hoddie } from "@/app/components/hoodie/hoodie";
 import { Mug } from "@/app/components/mug/mug";
-import { Object3D } from "@/app/components/shirt/shirt";
+import { TShirt } from "@/app/components/shirt/shirt";
 import { Sweatshirt } from "@/app/components/sweatshirt/sweatshirt";
 import { NewHoodie } from "@/app/components/newHoodie/newHoodie";
 import { useProductStore } from "@/store/productStore";
@@ -33,7 +32,7 @@ export const Model = () => {
       <directionalLight intensity={0.5} position={[10, 10, 10]} />
       <Environment preset="city" />
       {selectModel === "Shirt" ? (
-        <Object3D scale={2} position={[0, 0, 0]} />
+        <TShirt  position={[0, 0.04, 0]} />
       ) : selectModel === "Hoodie" ? (
         <NewHoodie />
       ) : selectModel == "Sweatshirt" ? (
