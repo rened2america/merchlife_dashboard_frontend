@@ -65,7 +65,7 @@ const PreviewImage = ({ imageFile }: { imageFile: string }) => {
   }, [imageFile]);
 
   // You can use `modifiedImageUrl` as needed, for example, display it or send it to a server
-  console.log(modifiedImageUrl);
+  // console.log(modifiedImageUrl);
 
   return (
     <div
