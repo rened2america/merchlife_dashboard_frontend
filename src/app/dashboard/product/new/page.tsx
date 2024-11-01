@@ -1,5 +1,4 @@
 "use client";
-import CanvasModel from "@/app/components/Model/Model";
 import { Model } from "@/common/components/generic/3DModel/3DModel";
 import { DesignProperties } from "@/common/components/generic/DesignProperties/DesignProperties";
 import { SelectColor } from "@/common/components/generic/SelectColor/SelectColor";

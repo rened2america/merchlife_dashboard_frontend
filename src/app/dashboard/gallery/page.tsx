@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { PageTitle } from "@/common/components/generic/PageTitle/PageTitle";
 import { PageLayout } from "@/common/layouts/PageLayout/PageLayout";
 import { useGetGallery, useUploadArt } from "./useGallery";
@@ -12,6 +12,9 @@ import BeatLoader from "react-spinners/BeatLoader";
 import GenerateAIImage from "./GenerateAIImage";
 import BuyCredits from "./BuyCredits";
 import SyncLoader from "react-spinners/SyncLoader";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const Gallery = () => {
   const { mutate, isLoading: isLoadingArt } = useUploadArt();
   const { data, isLoading: isLoadingGallery, refetch } = useGetGallery();
@@ -33,6 +36,32 @@ const Gallery = () => {
   };
 
   const showCroppedImage = async () => {
+    let errorMessages = [];
+
+    // Validate image title
+    if (!imageName) {
+      errorMessages.push("Please enter the image Title");
+    }
+
+    // Validate file or AI-generated image
+    if (!(selectedFile || aiGeneratedImage)) {
+      errorMessages.push("Please upload or generate an image");
+    }
+
+    // Display errors if any
+    if (errorMessages.length) {
+      toast.error(errorMessages.join("\n"), {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
     try {
       const croppedImage = await getCroppedImg(urlImage, croppedAreaPixels);
       console.log("croppedImage", croppedImage);
@@ -69,18 +98,14 @@ const Gallery = () => {
   });
 
   const handleSubmit = (imageCrop) => {
-    if ((selectedFile || aiGeneratedImage) && imageName) {
-      console.log("handleSubmit")
-      const formData = new FormData();
-      formData.append("art", imageCrop);
-      formData.append("name", imageName);
-      // formData.append("imageCrop", imageCrop);
-      formData.append("shouldCreateCanvas", String(shouldCreateCanvas));
-      formData.append("shouldCreatePoster", String(shouldCreatePoster));
-      mutate(formData);
-    } else {
-      // Handle the case where an image has not been selected or a name has not been entered
-    }
+    // Validations are already done in showCroppedImage
+    const formData = new FormData();
+    formData.append("art", imageCrop);
+    formData.append("name", imageName);
+    formData.append("shouldCreateCanvas", String(shouldCreateCanvas));
+    formData.append("shouldCreatePoster", String(shouldCreatePoster));
+    mutate(formData);
+
   };
 
   const handlePosterChange = (event) => {
@@ -107,6 +132,10 @@ const Gallery = () => {
       refetch();
     }
   }, [isLoadingArt]);
+
+  const handleZoomChange = useCallback((newZoom) => {
+    setZoom(newZoom);
+  }, []);
 
   console.log("selectedFile", fileRejections);
   return isLoadingGallery ?
@@ -159,7 +188,7 @@ const Gallery = () => {
                       <input
                         type="text"
                         id="title"
-                        placeholder="Enter Art Title"
+                        placeholder="Enter Image Title"
                         value={imageName}
                         onChange={(e) => setImageName(e.target.value)}
                         className="p-2 w-full text-sm bg-gray-800 text-white rounded border border-gray-700"
@@ -213,16 +242,19 @@ const Gallery = () => {
                         onCropChange={setCrop}
                         onCropComplete={onCropComplete}
                         onZoomChange={setZoom}
+                        minZoom={0.5}
+                        maxZoom={2}
+                        restrictPosition={false}
                       />
                     )}
                   </div>
                   <input
                     type="range"
                     value={zoom}
-                    min={1}
-                    max={3}
-                    step={0.1}
-                    onChange={(e) => setZoom(e.target.value)}
+                    min={0}
+                    max={2}
+                    step={0.05}
+                    onChange={(e) => handleZoomChange(parseFloat(e.target.value))}
                     className="w-full mt-2"
                   />
                   <button
@@ -240,6 +272,18 @@ const Gallery = () => {
 
               }
             </div>
+            <ToastContainer
+              position="top-right"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="dark"
+            />
           </div>
         </div>
       </PageLayout>
