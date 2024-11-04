@@ -2,20 +2,14 @@
 
 import * as THREE from "three";
 import { useEffect, useState } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import {
   useGLTF,
   useTexture,
-  OrbitControls,
   PivotControls,
-  AccumulativeShadows,
-  RandomizedLight,
   Decal,
-  Html,
 } from "@react-three/drei";
-import { useControls, button } from "leva";
 import { useProduct } from "./useProduct";
-import AWS from "aws-sdk";
 import { useProductStore } from "@/store/productStore";
 import { easing } from "maath";
 //@ts-nocheck
@@ -30,8 +24,6 @@ const DEFAULT_COLORS = {
 
 export const TShirt = (props: any) => {
   const gl = useThree((state) => state.gl);
-  const [pos, setXYZ] = useState([0, 0, 0.1]);
-  const [rot, setRot] = useState([0, 0, 0]);
   const position = useProductStore((state) => {
     return { x: state.x, y: state.y, z: state.z };
   });
@@ -46,6 +38,8 @@ export const TShirt = (props: any) => {
   const { mutate: createProduct, isLoading, isSuccess } = useProduct();
   const save = useProductStore((state) => state.save);
   const updateSave = useProductStore((state) => state.updateSave);
+  const saveStep = useProductStore((state) => state.saveStep);
+  const updateSaveStep = useProductStore((state) => state.updateSaveStep);
   const addImageProduct = useProductStore((state) => state.addNewImgProduct);
   const imagesProduct = useProductStore((state) => state.imgProduct);
   const colorsSelected = useProductStore((state) => state.colorsSelected);
@@ -70,11 +64,15 @@ export const TShirt = (props: any) => {
   const price = useProductStore((state) => state.price)
   const resetProductColor = useProductStore((state) => state.resetProductColor);
 
-  useEffect(
-    () => console.log("transitionProduct: ", transitionProduct),
-    [transitionProduct]
-  );
-  useEffect(() => console.log("openToast: ", openToast), [openToast]);
+  const [userSelectedColor, setUserSelectedColor] = useState(color);
+
+  // Update userSelectedColor when color changes via eye button
+  useEffect(() => {
+    if (!save) {
+      setUserSelectedColor(color);
+    }
+  }, [color, save]);
+
   useEffect(() => {
     if (isSuccess) {
       updateTransitionProduct("saved");
@@ -83,7 +81,7 @@ export const TShirt = (props: any) => {
       }, 5000);
 
       return () => {
-        clearInterval(closeToast);
+        clearTimeout(closeToast);
       };
     }
   }, [isSuccess]);
@@ -96,7 +94,7 @@ export const TShirt = (props: any) => {
       imagesProduct.blue.length > 0 &&
       imagesProduct.black.length > 0
     ) {
-      console.log("Creando Producto");
+      console.log("Creating Product");
       console.log(imagesProduct);
       //@ts-ignore
       createProduct({
@@ -116,7 +114,7 @@ export const TShirt = (props: any) => {
         groupId,
       });
       updateTransitionProduct("saving");
-
+      // Reset imagesProduct
       addImageProduct({
         white: "",
         beige: "",
@@ -135,103 +133,93 @@ export const TShirt = (props: any) => {
 
   useFrame((state, delta) => {
     if (save) {
-      if (resetProductColor) {
-        updateColor(DEFAULT_COLORS.white);
-        easing.dampC(materials.lambert1.color, DEFAULT_COLORS.white, 0, delta);
-        updateResetProductColor(false);
-      }
-      if (
-        materials.lambert1.color.b === 1 &&
-        materials.lambert1.color.g === 0.9386857284565036 &&
-        materials.lambert1.color.r === 0.8713671191959567
-      ) {
-        updateOpenToast(true);
-        updateTransitionProduct("snapshots");
-        const base64 = gl.domElement
-          .toDataURL("image/png")
-          .replace("image/png", "image/octet-stream");
-        addImageProduct({ white: base64 });
-        updateColor(DEFAULT_COLORS.beige);
-      }
-      if (
-        materials.lambert1.color.b === 0.407240211891531 &&
-        materials.lambert1.color.g === 0.783537791521566 &&
-        materials.lambert1.color.r === 0.8962693533719567
-      ) {
-        const base64 = gl.domElement
-          .toDataURL("image/png")
-          .replace("image/png", "image/octet-stream");
-        addImageProduct({ beige: base64 });
-        updateColor(DEFAULT_COLORS.red);
-      }
-      if (
-        materials.lambert1.color.b === 0 &&
-        materials.lambert1.color.g === 0 &&
-        materials.lambert1.color.r === 1
-      ) {
-        const base64 = gl.domElement
-          .toDataURL("image/png")
-          .replace("image/png", "image/octet-stream");
-        addImageProduct({ red: base64 });
-        updateColor(DEFAULT_COLORS.blue);
-      }
-
-      if (
-        materials.lambert1.color.b === 0.7529422167708612 &&
-        materials.lambert1.color.g === 0.1412632911304446 &&
-        materials.lambert1.color.r === 0.05286064701616472
-      ) {
-        const base64 = gl.domElement
-          .toDataURL("image/png")
-          .replace("image/png", "image/octet-stream");
-        addImageProduct({ blue: base64 });
-        updateColor(DEFAULT_COLORS.black);
-      }
-      if (
-        materials.lambert1.color.b === 0.030713443727452196 &&
-        materials.lambert1.color.g === 0.030713443727452196 &&
-        materials.lambert1.color.r === 0.030713443727452196
-      ) {
-        console.log("black");
-        const base64 = gl.domElement
-          .toDataURL("image/png")
-          .replace("image/png", "image/octet-stream");
-        addImageProduct({ black: base64 });
-        updateSave(false);
-        updateResetProductColor(true);
+      switch (saveStep) {
+        case 0:
+          // Reset to white color
+          updateColor(DEFAULT_COLORS.white);
+          easing.dampC(materials.lambert1.color, DEFAULT_COLORS.white, 0.2, delta);
+          if (colorsMatch(materials.lambert1.color, DEFAULT_COLORS.white)) {
+            updateOpenToast(true);
+            updateTransitionProduct("snapshots");
+            const base64 = gl.domElement.toDataURL("image/webp");
+            addImageProduct({ white: base64 });
+            updateSaveStep(1); // Proceed to next step
+          }
+          break;
+        case 1:
+          // Change to beige color
+          updateColor(DEFAULT_COLORS.beige);
+          easing.dampC(materials.lambert1.color, DEFAULT_COLORS.beige, 0.2, delta);
+          if (colorsMatch(materials.lambert1.color, DEFAULT_COLORS.beige)) {
+            const base64 = gl.domElement.toDataURL("image/webp");
+            addImageProduct({ beige: base64 });
+            updateSaveStep(2);
+          }
+          break;
+        case 2:
+          // Change to red color
+          updateColor(DEFAULT_COLORS.red);
+          easing.dampC(materials.lambert1.color, DEFAULT_COLORS.red, 0.2, delta);
+          if (colorsMatch(materials.lambert1.color, DEFAULT_COLORS.red)) {
+            const base64 = gl.domElement.toDataURL("image/webp");
+            addImageProduct({ red: base64 });
+            updateSaveStep(3);
+          }
+          break;
+        case 3:
+          // Change to blue color
+          updateColor(DEFAULT_COLORS.blue);
+          easing.dampC(materials.lambert1.color, DEFAULT_COLORS.blue, 0.2, delta);
+          if (colorsMatch(materials.lambert1.color, DEFAULT_COLORS.blue)) {
+            const base64 = gl.domElement.toDataURL("image/webp");
+            addImageProduct({ blue: base64 });
+            updateSaveStep(4);
+          }
+          break;
+        case 4:
+          // Change to black color
+          updateColor(DEFAULT_COLORS.black);
+          easing.dampC(materials.lambert1.color, DEFAULT_COLORS.black, 0.2, delta);
+          if (colorsMatch(materials.lambert1.color, DEFAULT_COLORS.black)) {
+            const base64 = gl.domElement.toDataURL("image/webp");
+            addImageProduct({ black: base64 });
+            updateSaveStep(5);
+          }
+          break;
+        case 5:
+          // All steps completed
+          updateSave(false);
+          updateResetProductColor(true);
+          updateSaveStep(0); // Reset for next save  
+          // Reset to user-selected color
+          updateColor(userSelectedColor);        
+          break;
+        default:
+          break;
       }
     }
 
+    // Apply the current color
     easing.dampC(materials.lambert1.color, color, 0.2, delta);
   });
 
+  const colorsMatch = (color1: THREE.Color, color2Hex: string) => {
+    const color2 = new THREE.Color(color2Hex);
+    const tolerance = 0.01;
+    return (
+      Math.abs(color1.r - color2.r) < tolerance &&
+      Math.abs(color1.g - color2.g) < tolerance &&
+      Math.abs(color1.b - color2.b) < tolerance
+    );
+  };
+
   // @ts-ignore
   const { nodes, materials } = useGLTF("/shirt_baked.glb");
-  // const { nodes, materials, scene } = useGLTF("/hoodie.glb");
-  // const { debug, scale, name } = useControls({
-  //   debug: false,
-  //   name: {
-  //     value: "",
-  //   },
-  //   image: { image: "/1200px-Starbucks_Logo_ab_2011.svg.png" },
-  //   scale: { value: 0.2, min: 0.12, max: 0.4 },
-  //   save: button(async () => {
-  //     const link = document.createElement("a");
-  //     link.setAttribute("download", "canvas.png");
-  //     console.log("Nombre", name);
-  //     console.log(image);
-  //     const imgLogo = await blobUrlToBase64(image);
-  //     console.log(imgLogo);
-  //     //@ts-ignore
-  //     // createProduct({
-  //     //   name,
-  //     //   imgProduct: gl.domElement.toDataURL("image/png"),
-  //     //   imgLogo: imgLogo,
-  //     // });
-  //   }),
-  // });
 
-  // Ejemplo de uso
+  useEffect(() => {
+    updatePosition({ x: 0, y: 0, z: 0 });
+  }, [updatePosition]);
+  
   return (
     <>
       <mesh
@@ -263,9 +251,9 @@ export const TShirt = (props: any) => {
                   return y;
                 };
                 const newposition = new THREE.Vector3();
-                const scale = new THREE.Vector3();
+                const scaleVec = new THREE.Vector3();
                 const quaternion = new THREE.Quaternion();
-                local.decompose(newposition, quaternion, scale);
+                local.decompose(newposition, quaternion, scaleVec);
                 const rotation = new THREE.Euler().setFromQuaternion(
                   quaternion
                 );

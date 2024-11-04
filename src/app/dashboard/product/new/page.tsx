@@ -19,6 +19,7 @@ const NewProdut = () => {
   const menu = useProductStore((state) => state.menuDesign);
   const updateMenuDesign = useProductStore((state) => state.updateMenuDesign);
   const updateSave = useProductStore((state) => state.updateSave);
+  const updateSaveStep = useProductStore((state) => state.updateSaveStep);
   const openToast = useProductStore((state) => state.openToast);
   const transitionProduct = useProductStore((state) => state.transitionProduct);
   const imgLogo = useProductStore((state) => state.imgLogo);
@@ -55,6 +56,7 @@ const NewProdut = () => {
       });
     } else {
       updateSave(true);
+      updateSaveStep(0);
     }
   };
 

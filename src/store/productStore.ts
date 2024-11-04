@@ -32,6 +32,7 @@ const initialState = {
   width: 0,
   scale: 0.1,
   save: false,
+  saveStep: 0,
   menuDesign: "Product",
   openToast: false,
   transitionProduct: "creation",
@@ -76,6 +77,7 @@ interface ProductState {
   width: number;
   scale: number;
   save: boolean;
+  saveStep: number;
   menuDesign: string;
   openToast: boolean;
   transitionProduct: string;
@@ -99,6 +101,7 @@ interface ProductState {
   updateProduct: (product: string) => void;
   updateImgLogo: (imgLogo: string) => void;
   updateSave: (save: boolean) => void;
+  updateSaveStep: (step: number) => void;
   updateAngle: (angle: number) => void;
   updateScale: (scale: number) => void;
   updateMenuDesign: (menuDesign: string) => void;
@@ -173,6 +176,8 @@ export const useProductStore = create<ProductState>((set, get) => {
     updateProduct: (product: string) => set({ product }),
     updateImgLogo: (imgLogo: string) => set({ imgLogo }),
     updateSave: (save: boolean) => set({ save }),
+    saveStep: 0,
+    updateSaveStep: (step: number) => set({ saveStep: step }),
     updateAngle: (angle: number) => set({ angle }),
     updateScale: (scale: number) => set({ scale }),
     updateMenuDesign: (menuDesign: string) => set({ menuDesign }),
