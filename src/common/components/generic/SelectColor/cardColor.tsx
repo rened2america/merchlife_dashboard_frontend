@@ -17,7 +17,7 @@ export const CardColor: FC<{ color: string; colorName: string }> = ({
   const updateColorsSelected = useProductStore(
     (state) => state.updateColorsSelected
   );
-  const colorsSelected = useProductStore((state) => state.colorsSelected);
+  const isSelected = useProductStore((state) => state.colorsSelected[color]);
   const updateColor = useProductStore((state) => state.updateColor);
   return (
     <div
@@ -31,7 +31,7 @@ export const CardColor: FC<{ color: string; colorName: string }> = ({
     >
       <div
         style={
-          colorsSelected[color]
+          isSelected
             ? {
                 display: "grid",
                 gridTemplateColumns: "32px 1fr",

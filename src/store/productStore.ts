@@ -153,15 +153,13 @@ export const useProductStore = create<ProductState>((set, get) => {
 
     updateResetProductColor: (resetProductColor: boolean) =>
       set({ resetProductColor }),
-    updateColorsSelected: (colorsSelected: string) =>
-      set((state: any) => {
-        return {
-          colorsSelected: {
-            ...state.colorsSelected,
-            ...{ [colorsSelected]: !state.colorsSelected[colorsSelected] },
-          },
-        };
-      }),
+    updateColorsSelected: (color: string) =>
+      set((state: any) => ({
+        colorsSelected: {
+          ...state.colorsSelected,
+          [color]: !state.colorsSelected[color],
+        },
+      })),
     updateName: (name: string) => set({ name }),
     setPrice: (price: number) => set({ price }),
     validateAndUpdatePrice: (price: number) => {
