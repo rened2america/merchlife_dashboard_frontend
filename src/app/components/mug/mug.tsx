@@ -268,9 +268,6 @@ export const Mug = (props: any) => {
 
   // @ts-ignore
   const { nodes, materials } = useGLTF("/plain_mug.glb");
-  useEffect(() => {
-    updatePosition({ x: 0, y: 0, z: 0 });
-  }, [updatePosition]);
 
   return (
     <>

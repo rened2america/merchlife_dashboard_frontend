@@ -216,10 +216,6 @@ export const TShirt = (props: any) => {
   // @ts-ignore
   const { nodes, materials } = useGLTF("/shirt_baked.glb");
 
-  useEffect(() => {
-    updatePosition({ x: 0, y: 0, z: 0 });
-  }, [updatePosition]);
-  
   return (
     <>
       <mesh

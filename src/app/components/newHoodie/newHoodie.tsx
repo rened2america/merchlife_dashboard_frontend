@@ -243,10 +243,7 @@ export const NewHoodie = (props: any) => {
 
   // @ts-ignore
   const { nodes, materials } = useGLTF("/newhoodie.glb");
-  
-  useEffect(() => {
-    updatePosition({ x: 0, y: 0, z: 0 });
-  }, [updatePosition]);
+
   return (
     <group {...props} dispose={null}>
       <mesh

@@ -329,10 +329,6 @@ export const Sweatshirt = (props: any) => {
   // @ts-ignore
   const { nodes, materials } = useGLTF("/Crew-neck Sweatshirt v1_0.glb");
 
-  useEffect(() => {
-    updatePosition({ x: 0, y: 0, z: 0 });
-  }, [updatePosition]);
-  
   return (
     <group position={[0, -1.3, 0]} {...props} dispose={null}>
       <mesh
