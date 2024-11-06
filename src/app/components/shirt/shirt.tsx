@@ -192,7 +192,7 @@ export const TShirt = (props: any) => {
           updateResetProductColor(true);
           updateSaveStep(0); // Reset for next save  
           // Reset to user-selected color
-          updateColor(userSelectedColor);        
+          updateColor(userSelectedColor);
           break;
         default:
           break;
@@ -213,6 +213,33 @@ export const TShirt = (props: any) => {
     );
   };
 
+  // Define the area boundaries
+  const AREA_X_MIN = -0.14;
+  const AREA_X_MAX = 0.14;
+  const AREA_Y_MIN = -0.3;
+  const AREA_Y_MAX = 0.15;
+
+  // Adjusted functions
+  const minAndMaxX = (x: number, scale: number) => {
+    const halfImageWidth = scale / 2;
+    const xMin = AREA_X_MIN + halfImageWidth;
+    const xMax = AREA_X_MAX - halfImageWidth;
+
+    if (x > xMax) return xMax;
+    if (x < xMin) return xMin;
+    return x;
+  };
+
+  const minAndMaxY = (y: number, scale: number) => {
+    const halfImageHeight = scale / 2;
+    const yMin = AREA_Y_MIN + halfImageHeight;
+    const yMax = AREA_Y_MAX - halfImageHeight;
+
+    if (y > yMax) return yMax;
+    if (y < yMin) return yMin;
+    return y;
+  };
+
   // @ts-ignore
   const { nodes, materials } = useGLTF("/shirt_baked.glb");
 
@@ -224,6 +251,7 @@ export const TShirt = (props: any) => {
         // geometry={nodes.Cloth_mesh_4.geometry}
         material={materials["lambert1"]}
         // material={materials["Knit_Fleece_Terry_FRONT_2650"]}
+        position={[0, 0.04, 0]}
         {...props}
         material-aoMapIntensity={1}
         dispose={null}
@@ -235,28 +263,17 @@ export const TShirt = (props: any) => {
               scale={0.2}
               activeAxes={[true, true, false]}
               onDrag={(local) => {
-                const minAndMaxX = (x: number) => {
-                  if (x > 0.1123051291365908) return 0.08958316665788457;
-                  if (x < -0.0955177962853023) return -0.0955177962853023;
-                  return x;
-                };
-
-                const minAndMaxY = (y: number) => {
-                  if (y > 0.12393409500680214) return 0.12393409500680214;
-                  if (y < -0.2649047726189107) return -0.2649047726189107;
-                  return y;
-                };
                 const newposition = new THREE.Vector3();
-                const scaleVec = new THREE.Vector3();
+                const tempScale = new THREE.Vector3();
                 const quaternion = new THREE.Quaternion();
-                local.decompose(newposition, quaternion, scaleVec);
-                const rotation = new THREE.Euler().setFromQuaternion(
-                  quaternion
-                );
+                local.decompose(newposition, quaternion, tempScale);
+                const rotation = new THREE.Euler().setFromQuaternion(quaternion);
+
+                const currentScale = useProductStore.getState().scale;
 
                 updatePosition({
-                  x: minAndMaxX(newposition.x),
-                  y: minAndMaxY(newposition.y),
+                  x: minAndMaxX(newposition.x, currentScale),
+                  y: minAndMaxY(newposition.y, currentScale),
                   z: newposition.z + 0.1,
                 });
                 updateAngle(rotation.z);

@@ -210,36 +210,38 @@ export const Hoddie = (props: any) => {
     );
   });
 
+  // Define the area boundaries
+  const AREA_X_MIN = -0.14;
+  const AREA_X_MAX = 0.14;
+  const AREA_Y_MIN = -0.55;
+  const AREA_Y_MAX = -0.02;
+
+  // Adjusted functions
+  const minAndMaxX = (x: number, scale: number) => {
+    const halfImageWidth = scale / 2;
+    const xMin = AREA_X_MIN + halfImageWidth;
+    const xMax = AREA_X_MAX - halfImageWidth;
+
+    if (x > xMax) return xMax;
+    if (x < xMin) return xMin;
+    return x;
+  };
+
+  const minAndMaxY = (y: number, scale: number) => {
+    const halfImageHeight = scale / 2;
+    const yMin = AREA_Y_MIN + halfImageHeight;
+    const yMax = AREA_Y_MAX - halfImageHeight;
+
+    if (y > yMax) return yMax;
+    if (y < yMin) return yMin;
+    return y;
+  };
+
   // @ts-ignore
   const { nodes, materials } = useGLTF("/hoodie.glb");
-  // const { nodes, materials, scene } = useGLTF("/hoodie.glb");
-  // const { debug, scale, name } = useControls({
-  //   debug: false,
-  //   name: {
-  //     value: "",
-  //   },
-  //   image: { image: "/1200px-Starbucks_Logo_ab_2011.svg.png" },
-  //   scale: { value: 0.2, min: 0.12, max: 0.4 },
-  //   save: button(async () => {
-  //     const link = document.createElement("a");
-  //     link.setAttribute("download", "canvas.png");
-  //     console.log("Nombre", name);
-  //     console.log(image);
-  //     const imgLogo = await blobUrlToBase64(image);
-  //     console.log(imgLogo);
-  //     //@ts-ignore
-  //     // createProduct({
-  //     //   name,
-  //     //   imgProduct: gl.domElement.toDataURL("image/png"),
-  //     //   imgLogo: imgLogo,
-  //     // });
-  //   }),
-  // });
-
-  // Ejemplo de uso
 
   return (
-    <group position={[0, -1.3, 0]} {...props} dispose={null}>
+    <group position={[0, -1.1, 0]} {...props} dispose={null} scale={0.83}>
       <mesh
         castShadow
         receiveShadow
@@ -358,31 +360,19 @@ export const Hoddie = (props: any) => {
           <group position={[0, 1.5, 0.2]}>
             <PivotControls
               scale={0.2}
-              activeAxes={[true, true, true]}
+              activeAxes={[true, true, false]}
               onDrag={(local) => {
-                const minAndMaxX = (x: number) => {
-                  if (x > 0.1123051291365908) return 0.08958316665788457;
-                  if (x < -0.0955177962853023) return -0.0955177962853023;
-                  return x;
-                };
-                console.log();
-                const minAndMaxY = (y: number) => {
-                  if (y > -0.07590870849426645) return -0.07590870849426645;
-                  if (y < -0.5152771083063961) return -0.5152771083063961;
-                  return y;
-                };
                 const newposition = new THREE.Vector3();
-                const scale = new THREE.Vector3();
+                const tempScale = new THREE.Vector3();
                 const quaternion = new THREE.Quaternion();
-                local.decompose(newposition, quaternion, scale);
-                console.log(scale);
-                const rotation = new THREE.Euler().setFromQuaternion(
-                  quaternion
-                );
+                local.decompose(newposition, quaternion, tempScale);
+                const rotation = new THREE.Euler().setFromQuaternion(quaternion);
+
+                const currentScale = useProductStore.getState().scale;
 
                 updatePosition({
-                  x: minAndMaxX(newposition.x),
-                  y: minAndMaxY(newposition.y),
+                  x: minAndMaxX(newposition.x, currentScale),
+                  y: minAndMaxY(newposition.y, currentScale),
                   z: newposition.z + 0.1,
                 });
                 updateAngle(rotation.z);

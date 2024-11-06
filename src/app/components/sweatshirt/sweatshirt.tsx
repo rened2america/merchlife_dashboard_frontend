@@ -326,6 +326,33 @@ export const Sweatshirt = (props: any) => {
     );
   };
 
+  // Define the area boundaries
+  const AREA_X_MIN = -0.14;
+  const AREA_X_MAX = 0.14;
+  const AREA_Y_MIN = -0.3;
+  const AREA_Y_MAX = 0.12;
+
+  // Adjusted functions
+  const minAndMaxX = (x: number, scale: number) => {
+    const halfImageWidth = scale / 2;
+    const xMin = AREA_X_MIN + halfImageWidth;
+    const xMax = AREA_X_MAX - halfImageWidth;
+
+    if (x > xMax) return xMax;
+    if (x < xMin) return xMin;
+    return x;
+  };
+
+  const minAndMaxY = (y: number, scale: number) => {
+    const halfImageHeight = scale / 2;
+    const yMin = AREA_Y_MIN + halfImageHeight;
+    const yMax = AREA_Y_MAX - halfImageHeight;
+
+    if (y > yMax) return yMax;
+    if (y < yMin) return yMin;
+    return y;
+  };
+
   // @ts-ignore
   const { nodes, materials } = useGLTF("/Crew-neck Sweatshirt v1_0.glb");
 
@@ -379,28 +406,17 @@ export const Sweatshirt = (props: any) => {
               scale={0.2}
               activeAxes={[true, true, false]}
               onDrag={(local) => {
-                const minAndMaxX = (x: number) => {
-                  if (x > 0.07651810371230058) return 0.07651810371230058;
-                  if (x < -0.08493404078529548) return -0.08493404078529548;
-                  return x;
-                };
-
-                const minAndMaxY = (y: number) => {
-                  if (y > 0.08504358249825411) return 0.08504358249825411;
-                  if (y < -0.2787565081200952) return -0.2787565081200952;
-                  return y;
-                };
                 const newposition = new THREE.Vector3();
-                const scaleVec = new THREE.Vector3();
+                const tempScale = new THREE.Vector3();
                 const quaternion = new THREE.Quaternion();
-                local.decompose(newposition, quaternion, scaleVec);
-                const rotation = new THREE.Euler().setFromQuaternion(
-                  quaternion
-                );
+                local.decompose(newposition, quaternion, tempScale);
+                const rotation = new THREE.Euler().setFromQuaternion(quaternion);
+
+                const currentScale = useProductStore.getState().scale;
 
                 updatePosition({
-                  x: minAndMaxX(newposition.x),
-                  y: minAndMaxY(newposition.y),
+                  x: minAndMaxX(newposition.x, currentScale),
+                  y: minAndMaxY(newposition.y, currentScale),
                   z: newposition.z + 0.1,
                 });
                 updateAngle(rotation.z);

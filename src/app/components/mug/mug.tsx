@@ -91,7 +91,7 @@ export const Mug = (props: any) => {
       imagesProduct.black.length > 0
     ) {
       console.log("Creating Product");
-      console.log(imagesProduct);
+      // console.log(imagesProduct);
       //@ts-ignore
       createProduct({
         imgLogo: image64base,
@@ -266,6 +266,33 @@ export const Mug = (props: any) => {
     );
   };
 
+    // Define the area boundaries
+    const AREA_X_MIN = -0.05;
+    const AREA_X_MAX = 0.05;
+    const AREA_Y_MIN = -0.09;
+    const AREA_Y_MAX = 0.045;
+  
+    // Adjusted functions
+    const minAndMaxX = (x: number, scale: number) => {
+      const halfImageWidth = scale / 2;
+      const xMin = AREA_X_MIN + halfImageWidth;
+      const xMax = AREA_X_MAX - halfImageWidth;
+  
+      if (x > xMax) return xMax;
+      if (x < xMin) return xMin;
+      return x;
+    };
+  
+    const minAndMaxY = (y: number, scale: number) => {
+      const halfImageHeight = scale / 2;
+      const yMin = AREA_Y_MIN + halfImageHeight;
+      const yMax = AREA_Y_MAX - halfImageHeight;
+  
+      if (y > yMax) return yMax;
+      if (y < yMin) return yMin;
+      return y;
+    };
+
   // @ts-ignore
   const { nodes, materials } = useGLTF("/plain_mug.glb");
 
@@ -289,29 +316,17 @@ export const Mug = (props: any) => {
                 scale={0.1}
                 activeAxes={[true, true, false]}
                 onDrag={(local) => {
-                  const minAndMaxX = (x: number) => {
-                    if (x > 0.0315) return 0.0315;
-                    if (x < -0.025) return -0.025;
-                    return x;
-                  };
-
-                  const minAndMaxY = (y: number) => {
-                    if (y > 0.022) return 0.022;
-                    if (y < -0.07) return -0.07;
-                    return y;
-                  };
                   const newposition = new THREE.Vector3();
-                  const scaleVec = new THREE.Vector3();
+                  const tempScale = new THREE.Vector3();
                   const quaternion = new THREE.Quaternion();
-                  local.decompose(newposition, quaternion, scaleVec);
-
-                  const rotation = new THREE.Euler().setFromQuaternion(
-                    quaternion
-                  );
-
+                  local.decompose(newposition, quaternion, tempScale);
+                  const rotation = new THREE.Euler().setFromQuaternion(quaternion);
+  
+                  const currentScale = useProductStore.getState().scale;                
+  
                   updatePosition({
-                    x: minAndMaxX(newposition.x),
-                    y: minAndMaxY(newposition.y),
+                    x: minAndMaxX(newposition.x, currentScale),
+                    y: minAndMaxY(newposition.y, currentScale),
                     z: newposition.z,
                   });
                   updateAngle(rotation.z);
@@ -323,7 +338,7 @@ export const Mug = (props: any) => {
           <Decal
             position={[position.z - 0.05, position.x, position.y + 0.1]}
             rotation={[0, -Math.PI / 2, angle - Math.PI / 2]}
-            scale={scale * 0.3}
+            scale={scale}
             map={useTexture(image)}
           />
         </mesh>

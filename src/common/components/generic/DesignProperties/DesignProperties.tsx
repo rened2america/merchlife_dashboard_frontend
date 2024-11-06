@@ -8,7 +8,6 @@ import {
   MenuPropertiesLayoutTitle,
 } from "@/common/layouts/PageLayout/MenuPropertiesLayout";
 import { useDropzone } from "react-dropzone";
-import { IconUpload } from "../../icons/IconUpload";
 import { useEffect, useState } from "react";
 import PreviewImage from "../PreviewImage/PreviewImage";
 import { useGetGallery } from "@/app/dashboard/gallery/useGallery";
@@ -27,22 +26,21 @@ export const DesignProperties = () => {
       "image/*": [],
     },
     onDrop: async (acceptedFiles) => {
-      console.log(acceptedFiles[0]);
-      console.log("viendo", URL.createObjectURL(acceptedFiles[0]));
+      // console.log(acceptedFiles[0]);
+      // console.log("viendo", URL.createObjectURL(acceptedFiles[0]));
       const response = await fetch(
         "https://media.licdn.com/dms/image/C5603AQFJGyfUdfWEvw/profile-displayphoto-shrink_100_100/0/1617441516348?e=1706745600&v=beta&t=nN2--3rE1K3QFwbMW_x16MpZVybXN52smQOZ1UnWpxE"
       );
       // Paso 2: Convertir a Blob
       const imageBlob = await response.blob();
-      console.log("imageBlob", imageBlob);
-      console.log("imageBlob64", URL.createObjectURL(imageBlob));
+      // console.log("imageBlob", imageBlob);
+      // console.log("imageBlob64", URL.createObjectURL(imageBlob));
 
       // updateImgLogo(URL.createObjectURL(acceptedFiles[0]));
       updateImgBase64Logo(URL.createObjectURL(imageBlob));
       setImgURL(URL.createObjectURL(imageBlob));
     },
   });
-  const updateImgLogo = useProductStore((state) => state.updateImgLogo);
   const updateImgBase64Logo = useProductStore(
     (state) => state.updateImgBase64Logo
   );
@@ -57,8 +55,7 @@ export const DesignProperties = () => {
       z: state.z,
     };
   });
-  const angle = useProductStore((state) => state.angle);
-  const selectModel = useProductStore((state) => state.selectModel);
+  const angle = useProductStore((state) => state.angle);  
 
   useEffect(() => {
     setPrevIma(false);
@@ -69,6 +66,94 @@ export const DesignProperties = () => {
       setPrevIma(true);
     }
   }, [prevIma]);
+
+  // Define the allowed area boundaries
+  // Default set for Sweatshirt
+  let AREA_X_MIN: number = -0.14;
+  let AREA_X_MAX: number = 0.14;
+  let AREA_Y_MIN: number = -0.3;
+  let AREA_Y_MAX: number = 0.12;
+  const selectedModel = useProductStore.getState().selectModel;
+  const MIN_SCALE = selectedModel === "Mug" ? 0.03 : 0.1
+  let maxScale = 0.3;
+  
+  if(selectedModel == "Shirt"){    
+    AREA_X_MIN = -0.14;
+    AREA_X_MAX = 0.14;
+    AREA_Y_MIN = -0.29;
+    AREA_Y_MAX = 0.14;
+  }
+  else if(selectedModel == "Hoodie"){    
+    AREA_X_MIN = -0.14;
+    AREA_X_MAX = 0.14;
+    AREA_Y_MIN = -0.55;
+    AREA_Y_MAX = -0.02;
+  }
+  else if(selectedModel == "Mug"){    
+    AREA_X_MIN = -0.05;
+    AREA_X_MAX = 0.05;
+    AREA_Y_MIN = -0.09;
+    AREA_Y_MAX =0.045;
+  }  
+
+  // Function to calculate maximum allowed scale
+  const calculateMaxScale = (x, y) => {
+    const maxScaleX = Math.min(
+      (AREA_X_MAX - x) * 2,
+      (x - AREA_X_MIN) * 2
+    );
+
+    const maxScaleY = Math.min(
+      (AREA_Y_MAX - y) * 2,
+      (y - AREA_Y_MIN) * 2
+    );
+
+    return Math.min(maxScaleX, maxScaleY);
+  };
+
+  // Function to adjust position based on scale
+  const adjustPositionForScale = (x, y, scale) => {
+    const halfScale = scale / 2;
+
+    let adjustedX = x;
+    let adjustedY = y;
+
+    if (x + halfScale > AREA_X_MAX) {
+      adjustedX = AREA_X_MAX - halfScale;
+    } else if (x - halfScale < AREA_X_MIN) {
+      adjustedX = AREA_X_MIN + halfScale;
+    }
+
+    if (y + halfScale > AREA_Y_MAX) {
+      adjustedY = AREA_Y_MAX - halfScale;
+    } else if (y - halfScale < AREA_Y_MIN) {
+      adjustedY = AREA_Y_MIN + halfScale;
+    }
+
+    return { x: adjustedX, y: adjustedY };
+  };
+
+  // Handler for scale changes
+  const handleScaleChange = (newScale) => {    
+
+    if (isNaN(newScale) || newScale <= 0) {
+      // Handle invalid input      
+      return;
+    }
+
+    const x = useProductStore.getState().x;
+    const y = useProductStore.getState().y;
+    maxScale = calculateMaxScale(x, y);
+
+    const validatedScale = Math.min(newScale, maxScale);
+    
+    const finalScale = Math.max(validatedScale, MIN_SCALE);
+
+    const adjustedPosition = adjustPositionForScale(x, y, finalScale);
+    updatePosition({ ...adjustedPosition, z: position.z });
+
+    updateScale(finalScale);
+  };
 
   return (
     <MenuPropertiesLayout>
@@ -216,11 +301,12 @@ export const DesignProperties = () => {
           >
             <Slider.Root
               className="SliderRoot"
-              defaultValue={[0.1]}
-              max={1}
-              step={0.05}
+              defaultValue={[MIN_SCALE]}
+              max={maxScale}
+              min={MIN_SCALE}
+              step={0.01}
               onValueChange={(e) => {
-                updateScale(e[0]);
+                handleScaleChange(e[0]);
               }}
             >
               <Slider.Track className="SliderTrack">
@@ -237,7 +323,7 @@ export const DesignProperties = () => {
               }}
               value={scale}
               type="number"
-              onChange={(e) => updateScale(parseFloat(e.target.value))}
+              onChange={(e) => handleScaleChange(parseFloat(e.target.value))}
             />
           </form>
         </div>
@@ -266,7 +352,7 @@ export const DesignProperties = () => {
                 updateGroupId(selectImage.id);
                 try {
                   const response = await fetch(selectImage.urlImage);
-                  console.log("dakho che bhai: ", response)
+                  console.log("Error: ", response)
                   const imageBlob = await response.blob();
                   updateImgBase64Logo(URL.createObjectURL(imageBlob));
                   setImgURL(URL.createObjectURL(imageBlob));

@@ -2,7 +2,7 @@
 import { Mug } from "@/app/components/mug/mug";
 import { TShirt } from "@/app/components/shirt/shirt";
 import { Sweatshirt } from "@/app/components/sweatshirt/sweatshirt";
-import { NewHoodie } from "@/app/components/newHoodie/newHoodie";
+import { Hoodie } from "@/app/components/hoodie/hoodie";
 import { useProductStore } from "@/store/productStore";
 import {
   AccumulativeShadows,
@@ -16,7 +16,6 @@ import SyncLoader from "react-spinners/SyncLoader";
 
 export const Model = () => {
   const selectModel = useProductStore((state) => state.selectModel);
-  console.log(selectModel);
   const Loading = () => {
     return (
       <Html center>
@@ -42,9 +41,9 @@ export const Model = () => {
       <Environment preset="city" />
       <Suspense fallback={<Loading />}>
         {selectModel === "Shirt" ? (
-          <TShirt position={[0, 0.04, 0]} />
+          <TShirt />
         ) : selectModel === "Hoodie" ? (
-          <NewHoodie />
+          <Hoodie />
         ) : selectModel == "Sweatshirt" ? (
           <Sweatshirt />
         ) : (
