@@ -140,6 +140,10 @@ export const DesignProperties = () => {
       // Handle invalid input      
       return;
     }
+    if(selectedModel == "Hoodie"){
+      updateScale(newScale);
+      return;
+    }
 
     const x = useProductStore.getState().x;
     const y = useProductStore.getState().y;

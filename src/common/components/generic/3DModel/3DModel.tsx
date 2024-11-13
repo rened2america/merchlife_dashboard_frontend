@@ -2,7 +2,7 @@
 import { Mug } from "@/app/components/mug/mug";
 import { TShirt } from "@/app/components/shirt/shirt";
 import { Sweatshirt } from "@/app/components/sweatshirt/sweatshirt";
-import { Hoodie } from "@/app/components/hoodie/hoodie";
+// import { Hoodie } from "@/app/components/hoodie/hoodie";
 import { useProductStore } from "@/store/productStore";
 import {
   AccumulativeShadows,
@@ -13,6 +13,7 @@ import {
 import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
 import SyncLoader from "react-spinners/SyncLoader";
+import { NewHoodie } from "@/app/components/newHoodie/newHoodie";
 
 export const Model = () => {
   const selectModel = useProductStore((state) => state.selectModel);
@@ -43,7 +44,7 @@ export const Model = () => {
         {selectModel === "Shirt" ? (
           <TShirt />
         ) : selectModel === "Hoodie" ? (
-          <Hoodie />
+          <NewHoodie />
         ) : selectModel == "Sweatshirt" ? (
           <Sweatshirt />
         ) : (
