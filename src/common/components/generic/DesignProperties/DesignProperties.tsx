@@ -168,7 +168,7 @@ export const DesignProperties = () => {
           width: "100%",
         }}
       >
-        <div
+        {/* <div
           style={{
             display: "grid",
             gridTemplateRows: "24px 48px",
@@ -285,7 +285,7 @@ export const DesignProperties = () => {
               />
             </div>
           </div>
-        </div>
+        </div> */}
         <div
           style={{
             display: "grid",
