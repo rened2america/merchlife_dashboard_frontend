@@ -23,7 +23,7 @@ const PreviewImage = ({ imageFile }: { imageFile: string }) => {
         fabricCanvasRef.current = canvas;
 
         const maxSize = Math.max(img.width, img.height);
-        console.log("se ejecutó fromURL ", maxSize);
+        console.log("fromURL was executed ", maxSize);
 
         canvas.setWidth(maxSize);
         canvas.setHeight(maxSize);
@@ -50,7 +50,7 @@ const PreviewImage = ({ imageFile }: { imageFile: string }) => {
           .then((res) => res.blob())
           .then((blob) => {
             const url = URL.createObjectURL(blob);
-            console.log("se ejecutó fetch: ", url);
+            console.log("fetch was executed: ", url);
             updateImgLogo(url);
           });
       });
@@ -64,7 +64,7 @@ const PreviewImage = ({ imageFile }: { imageFile: string }) => {
     };
   }, [imageFile]);
 
-  // You can use `modifiedImageUrl` as needed, for example, display it or send it to a server
+  // Can use `modifiedImageUrl` as needed, for example, display it or send it to a server
   // console.log(modifiedImageUrl);
 
   return (

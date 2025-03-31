@@ -13,7 +13,7 @@ import {
 import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
 import SyncLoader from "react-spinners/SyncLoader";
-import { NewHoodie } from "@/app/components/newHoodie/newHoodie";
+import { NewHoodie2611 } from "@/app/components/newHoodie/newHoodie2611";
 
 export const Model = () => {
   const selectModel = useProductStore((state) => state.selectModel);
@@ -44,7 +44,7 @@ export const Model = () => {
         {selectModel === "Shirt" ? (
           <TShirt />
         ) : selectModel === "Hoodie" ? (
-          <NewHoodie />
+          <NewHoodie2611 />
         ) : selectModel == "Sweatshirt" ? (
           <Sweatshirt />
         ) : (

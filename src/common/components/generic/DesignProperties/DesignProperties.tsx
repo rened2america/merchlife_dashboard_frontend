@@ -84,10 +84,10 @@ export const DesignProperties = () => {
     AREA_Y_MAX = 0.14;
   }
   else if(selectedModel == "Hoodie"){    
-    AREA_X_MIN = -0.14;
-    AREA_X_MAX = 0.14;
-    AREA_Y_MIN = -0.55;
-    AREA_Y_MAX = -0.02;
+    AREA_X_MIN = -10;
+    AREA_X_MAX = 0.5;
+    AREA_Y_MIN = -1;
+    AREA_Y_MAX = 1.5;
   }
   else if(selectedModel == "Mug"){    
     AREA_X_MIN = -0.05;

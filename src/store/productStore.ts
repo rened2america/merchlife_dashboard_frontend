@@ -37,7 +37,7 @@ const initialState = {
   openToast: false,
   transitionProduct: "creation",
   resetProductColor: false,
-  selectModel: "Sweatshirt",
+  selectModel: "Hoodie",
   tags: [],
 };
 
