@@ -88,12 +88,14 @@ export const DesignProperties = () => {
     AREA_X_MAX = 0.5;
     AREA_Y_MIN = -1;
     AREA_Y_MAX = 1.5;
+    maxScale = 0.5
   }
   else if(selectedModel == "Mug"){    
     AREA_X_MIN = -0.05;
     AREA_X_MAX = 0.05;
     AREA_Y_MIN = -0.09;
-    AREA_Y_MAX =0.045;
+    AREA_Y_MAX = 0.045;
+    maxScale = 0.1;
   }  
 
   // Function to calculate maximum allowed scale
@@ -147,16 +149,16 @@ export const DesignProperties = () => {
 
     const x = useProductStore.getState().x;
     const y = useProductStore.getState().y;
-    maxScale = calculateMaxScale(x, y);
+    // maxScale = calculateMaxScale(x, y);
 
-    const validatedScale = Math.min(newScale, maxScale);
+    // const validatedScale = Math.min(newScale, maxScale);
     
-    const finalScale = Math.max(validatedScale, MIN_SCALE);
+    // const finalScale = Math.max(validatedScale, MIN_SCALE);
 
-    const adjustedPosition = adjustPositionForScale(x, y, finalScale);
+    const adjustedPosition = adjustPositionForScale(x, y, newScale);
     updatePosition({ ...adjustedPosition, z: position.z });
 
-    updateScale(finalScale);
+    updateScale(newScale);
   };
 
   return (

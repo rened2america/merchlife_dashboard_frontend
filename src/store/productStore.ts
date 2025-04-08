@@ -24,6 +24,7 @@ const initialState = {
   description: "",
   product: "",
   color: "#f0f8ff",
+  primaryColor: "",
   x: 0,
   y: 0,
   z: 0.1,
@@ -89,6 +90,7 @@ interface ProductState {
   updateDimensions: (dimensions: { height: number; width: number; scale: number }) => void;
   updateGroupId: (groupId: number) => void;
   updateColor: (color: string) => void;
+  updatePrimaryColor: (primaryColor: string) => void;
   updateSelectModel: (selectModel: string) => void;
   updateTags: (tags: string) => void;
   updateResetProductColor: (resetProductColor: boolean) => void;
@@ -148,6 +150,9 @@ export const useProductStore = create<ProductState>((set, get) => {
     },
     updateGroupId: (groupId: number) => set({ groupId }),
     updateColor: (color: string) => set({ color }),
+    updatePrimaryColor: (primaryColor: string) => {
+        set({ primaryColor });           
+    },
     updateSelectModel: (selectModel: string) => {
       const minPrice = minimumPrices[selectModel] || 15.99;
       set({ selectModel, price: minPrice });

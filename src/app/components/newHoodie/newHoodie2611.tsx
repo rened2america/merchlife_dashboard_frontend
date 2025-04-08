@@ -216,7 +216,7 @@ export const NewHoodie2611 = (props: any) => {
   // Define the area boundaries
   const AREA_X_MIN = -12;
   const AREA_X_MAX = 10.5;
-  const AREA_Y_MIN = 0;
+  const AREA_Y_MIN = 3;
   const AREA_Y_MAX = 17;
 
   // Adjusted functions
@@ -310,7 +310,7 @@ export const NewHoodie2611 = (props: any) => {
 
             {/* Decal with adjusted positioning */}
             <Decal
-              debug // Keep this during development to see the decal bounds                          
+              // debug // Keep this during development to see the decal bounds                          
               // position={[1, 130, 20]}
               position={[position.x + 1, position.y + 130, position.z + 15.5]}
               rotation={[0, 0, angle]}

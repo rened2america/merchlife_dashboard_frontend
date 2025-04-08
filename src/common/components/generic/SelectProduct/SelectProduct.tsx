@@ -32,6 +32,9 @@ export const SelectProduct = () => {
   const name = useProductStore((state) => state.name);
   const price = useProductStore((state) => state.price);
   const description = useProductStore((state) => state.description);
+  const updateScale = useProductStore((state) => state.updateScale);
+  const updatePosition = useProductStore((state) => state.updatePosition);
+
   
   return (
     <MenuPropertiesLayout>
@@ -103,25 +106,45 @@ export const SelectProduct = () => {
           <div className="grid grid-cols-2 grid-rows-2  items-center justify-items-center gap-4">
             <div
               className={`border ${selectModel === "Shirt" ? "border-black" : "border-none"} w-[100%] h-[100%] grid items-center justify-items-center rounded-lg`}
-              onClick={() => updateSelectModel("Shirt")}
+              onClick={() => {
+                updateScale(0.1);
+                updateSelectModel("Shirt")
+                updatePosition({x:0,y:0,z:0.1});
+              }
+              }
             >
               <Image width={80} height={80} src="/shirtModel.png" alt="Shirt" />
             </div>
             <div
               className={`border ${selectModel === "Hoodie" ? "border-black" : "border-none"} w-[100%] h-[100%] grid items-center justify-items-center rounded-lg`}
-              onClick={() => updateSelectModel("Hoodie")}
+              onClick={() => {
+                updateScale(0.2);
+                updateSelectModel("Hoodie");
+                updatePosition({x:0,y:10,z:0.1});
+              }
+              }
             >
               <Image width={80} height={80} src="/hoodieModel.png" alt="Hoodie" />
             </div>
             <div
               className={`border ${selectModel === "Mug" ? "border-black" : "border-none"} w-[100%] h-[100%] grid items-center justify-items-center rounded-lg`}
-              onClick={() => updateSelectModel("Mug")}
+              onClick={() => {
+                updateScale(0.03);
+                updateSelectModel("Mug");
+                updatePosition({x:0,y:0,z:0.1});
+              }
+              }
             >
               <Image className="rounded-full" width={80} height={80} src="/mug.png" alt="Mug" />
             </div>
             <div
               className={`border ${selectModel === "Sweatshirt" ? "border-black" : "border-none"} w-[100%] h-[100%] grid items-center justify-items-center rounded-lg`}
-              onClick={() => updateSelectModel("Sweatshirt")}
+              onClick={() => {
+                updateScale(0.1);
+                updateSelectModel("Sweatshirt");
+                updatePosition({x:0,y:0,z:0.1});
+              }
+              }
             >
               <Image className="rounded-full" width={80} height={80} src="/sweatShirt.png" alt="Sweatshirt" />
             </div>
